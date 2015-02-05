@@ -27,15 +27,18 @@ public abstract class AbstractFileServiceHelper extends GenericServiceHelper imp
 	
 	@Override
 	public void executeService() throws Exception{
-		Exchange exchange = getServiceContext().getBean(ApplicationConstants.EXCHANGE, Exchange.class);
-		exchange.getIn().setHeader("status", "F");
-		return;
+		
 	}
 
 	@Override
 	public void handleService() throws Exception {
 		
 		logger.info(">> " + getClass().getSimpleName() + " handleService()");
+		
+		Exchange exchange = getServiceContext().getBean(ApplicationConstants.EXCHANGE, Exchange.class);
+		exchange.getIn().setHeader("status", "F");
+		
+		return;
 		
 	}
 	

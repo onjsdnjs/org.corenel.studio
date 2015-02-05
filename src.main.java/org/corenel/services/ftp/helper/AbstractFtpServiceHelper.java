@@ -1,7 +1,12 @@
 package org.corenel.services.ftp.helper;
 
+import org.apache.camel.Exchange;
 import org.corenel.core.common.ApplicationConstants;
+import org.corenel.core.common.domain.Response;
+import org.corenel.core.common.domain.ServiceResponse;
 import org.corenel.core.common.helper.GenericServiceHelper;
+import org.corenel.core.common.helper.ServiceHelperHolder;
+import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
 import org.corenel.services.ftp.service.FtpService;
 import org.slf4j.Logger;
@@ -28,6 +33,7 @@ public abstract class AbstractFtpServiceHelper extends GenericServiceHelper impl
 	
 	@Override
 	public void executeService() throws Exception{
+		throw new Exception("ftp: 파일 업로드에 실패하였습니다.");
 	}
 
 	@Override
@@ -35,6 +41,22 @@ public abstract class AbstractFtpServiceHelper extends GenericServiceHelper impl
 		
 		logger.info(">> " + getClass().getSimpleName() + " handleService()");
 		
-	}
+//		try {
+			
+			executeService();
+			new Exception("ftp: 파일 업로드에 실패하였습니다.");
+			
+		/*} catch (Exception e) {
+			
+			Exchange exchange = getServiceContext().getBean(ApplicationConstants.EXCHANGE, Exchange.class);
+
+			Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
+			
+			Response response = new ServiceResponse();
+			response.setMessage(new Exception("ftp: 파일 업로드에 실패하였습니다.").getMessage());
+			pipeline.setResult(response);
+
+		}
+*/	}
 	
 }
