@@ -33,7 +33,7 @@ public abstract class AbstractDisruptorServiceHelper extends GenericServiceHelpe
 		
 		logger.info("Disruptor initialize..");
 		
-		disruptorExecutor = new DefaultDisruptorExecutor<ServiceHelperHolder<ServiceHelper>>();
+		disruptorExecutor = new DefaultDisruptorExecutor<ServiceHelperHolder<ServiceHelper>>(getServiceContext());
 		
 		DispatcherHandler<ServiceHelperHolder<ServiceHelper>> handler = new DispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();

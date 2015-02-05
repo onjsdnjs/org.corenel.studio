@@ -34,6 +34,7 @@ public class ApplicationConstants implements Serializable{
 	public static final String SERVICE_CLASSES = "serviceClasses";
 	public static final String SERVICE_DISPATCHER= "serviceDispatcher";
 	public static final String SERVICE_CLASS_TYPE = "serviceClassType";
+	public static final String EXCHANGE = "exchange";
 	public static final String SERVICE_FACTORY = "serviceFactory";
 	public static final String MODEL_MAP = "modelMap";
 	public static final String COLUMN_CONFIG = "columnKey";
@@ -43,6 +44,8 @@ public class ApplicationConstants implements Serializable{
 	public static final String FIELD_VALUES = "fieldValues";
 	public static final String VALIDATION_TITLE = "validationTitle";
 	public static final String VALIDATION_INFO = "validationInfo";
+
+	public static final String EVENT_HANDLER_CHAIN = "eventHandlerChain";
 
 	public static final String TRAN_CRDT_SUCCESS = "Tran.Crdt.Success";
 	public static final String TRAN_HP_SUCCESS = "Tran.Hp.Success";

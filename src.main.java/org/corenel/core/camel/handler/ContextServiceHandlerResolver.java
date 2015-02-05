@@ -30,6 +30,7 @@ public class ContextServiceHandlerResolver implements Processor{
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		ServiceHelper dettachService = pipeline.removeServiceHelperChain();
 		serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, dettachService);
+		serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
 		
 		logger.info("ServiceHelper:{}", dettachService.getClass().getName());
 		

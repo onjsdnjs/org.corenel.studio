@@ -1,5 +1,6 @@
 package org.corenel.core.disruptor.executor;
 
+import org.corenel.core.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,10 @@ import com.lmax.disruptor.EventTranslatorTwoArg;
 public class DefaultDisruptorExecutor<T> extends AbstractDisruptorExecutor<T>{
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
+	
+	public DefaultDisruptorExecutor(Context<String, Object> serviceContext) {
+		super(serviceContext);
+	}
 
 	@Override
 	public void publish(EventTranslator<T> eventTranslator){
