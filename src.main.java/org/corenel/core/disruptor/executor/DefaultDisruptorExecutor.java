@@ -19,25 +19,25 @@ public class DefaultDisruptorExecutor<T> extends AbstractDisruptorExecutor<T>{
 	}
 
 	@Override
-	public void publish(EventTranslator<T> eventTranslator){
+	public void publish(EventTranslator<T> eventTranslator) throws Exception{
 		logger.info("Publish Event()..");
 		getRingBuffer().publishEvent(eventTranslator);
 	}
 	
 	@Override
-	public <A> void publish(EventTranslatorOneArg<T, A> eventTranslator, A arg) {
+	public <A> void publish(EventTranslatorOneArg<T, A> eventTranslator, A arg) throws Exception{
 		logger.info("Publish Event()..");
 		getRingBuffer().publishEvent(eventTranslator, arg);
 	}
 
 	@Override
-	public <A, B> void publish(EventTranslatorTwoArg<T, A, B> eventTranslator, A arg1, B arg2) {
+	public <A, B> void publish(EventTranslatorTwoArg<T, A, B> eventTranslator, A arg1, B arg2) throws Exception{
 		logger.info("Publish Event()..");
 		getRingBuffer().publishEvent(eventTranslator, arg1, arg2);
 	}
 
 	@Override
-	public <A, B, C> void publish( EventTranslatorThreeArg<T, A, B, C> eventTranslator, A arg1, B arg2, C arg3) {
+	public <A, B, C> void publish( EventTranslatorThreeArg<T, A, B, C> eventTranslator, A arg1, B arg2, C arg3) throws Exception{
 		logger.info("Publish Event()..");
 		getRingBuffer().publishEvent(eventTranslator, arg1, arg2, arg3);
 	}

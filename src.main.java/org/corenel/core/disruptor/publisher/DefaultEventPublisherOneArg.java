@@ -13,7 +13,7 @@ public class DefaultEventPublisherOneArg<T,A> extends AbstractEventPublisher<T> 
 	}
 
 	@Override
-	public <A> void publish(A arg1) {
+	public <A> void publish(A arg1) throws Exception{
 		EventTranslatorOneArg<T,A> eventTranslator = new DefaultEventTranslatorOneArg<T,A>();
 		getDisruptorExecutor().publish(eventTranslator, arg1);
 	}

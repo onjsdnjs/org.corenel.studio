@@ -9,13 +9,13 @@ import com.lmax.disruptor.EventTranslatorTwoArg;
 
 public interface DisruptorExecutor<T> extends Serializable {
 
-	void publish(EventTranslator<T> eventTranslator);
+	void publish(EventTranslator<T> eventTranslator) throws Exception;
 	
-	<A> void publish(EventTranslatorOneArg<T,A> eventTranslator, A arg);
+	<A> void publish(EventTranslatorOneArg<T,A> eventTranslator, A arg) throws Exception;
 	
-	<A, B> void publish(EventTranslatorTwoArg<T,A,B> eventTranslator, A arg1, B arg2); 
+	<A, B> void publish(EventTranslatorTwoArg<T,A,B> eventTranslator, A arg1, B arg2) throws Exception; 
 	
-	<A, B, C> void publish(EventTranslatorThreeArg<T,A,B,C> eventTranslator, A arg1, B arg2, C arg3); 
+	<A, B, C> void publish(EventTranslatorThreeArg<T,A,B,C> eventTranslator, A arg1, B arg2, C arg3) throws Exception; 
 	
 	void disruptorEventHandler();
 	

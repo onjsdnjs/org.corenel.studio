@@ -13,7 +13,7 @@ public class DefaultEventPublisherTwoArg<T,A,B> extends AbstractEventPublisher<T
 	}
 
 	@Override
-	public <A, B> void publish(A arg1, B arg2) {
+	public <A, B> void publish(A arg1, B arg2) throws Exception{
 		EventTranslatorTwoArg<T,A,B> eventTranslator = new DefultEventTranslatorTwoArg<T,A,B>();
 		getDisruptorExecutor().publish(eventTranslator, arg1, arg2);
 	}

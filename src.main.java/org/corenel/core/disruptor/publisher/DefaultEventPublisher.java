@@ -12,7 +12,7 @@ public class DefaultEventPublisher<T> extends AbstractEventPublisher<T> implemen
 	}
 
 	@Override
-	public void publish() {
+	public void publish() throws Exception{
 		EventTranslator<T> eventTranslator = new DefaultEventTranslator<T>();
 		getDisruptorExecutor().publish(eventTranslator);
 	}

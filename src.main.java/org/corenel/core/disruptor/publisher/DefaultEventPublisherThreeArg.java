@@ -13,7 +13,7 @@ public class DefaultEventPublisherThreeArg<T,A,B,C> extends AbstractEventPublish
 	}
 
 	@Override
-	public <A, B, C> void publish(A arg1, B arg2, C arg3) {
+	public <A, B, C> void publish(A arg1, B arg2, C arg3) throws Exception{
 		EventTranslatorThreeArg<T,A,B,C> eventTranslator = new DefultEventTranslatorThreeArg<T,A,B,C>();
 		getDisruptorExecutor().publish(eventTranslator, arg1, arg2, arg3);
 	}

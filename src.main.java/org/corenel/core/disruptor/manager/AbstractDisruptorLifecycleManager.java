@@ -48,16 +48,6 @@ public abstract class AbstractDisruptorLifecycleManager<T> implements DisruptorL
 		    Thread.currentThread().interrupt();
 		}catch (TimeoutException e) {
 		}
-		
-		/*while(true){
-			if(executor.isTerminated()){
-				LOG.debug("스레드 종료");
-				break;
-			}else{
-				LOG.debug("아직 처리중인 작업 존재");
-			}
-		}*/
-		
 	}
 
 	public void setThreadName(String threadName) {

@@ -1,6 +1,7 @@
 package org.corenel.core.disruptor.executor;
 
 import java.util.concurrent.Executors;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.Validate;
 import org.corenel.core.common.ApplicationConstants;
@@ -90,7 +91,7 @@ public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLife
 	@Override
 	public void init(){
 		
-		Validate.notNull(getThreadName());
+//		Validate.notNull(getThreadName());
 		Validate.notNull(getEventFactory());
 		
 		createThreadExecutor();
@@ -198,5 +199,5 @@ public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLife
 	}
 	
 	@Override
-	public abstract void publish(EventTranslator<T> eventTranslator); 
+	public abstract void publish(EventTranslator<T> eventTranslator) throws Exception; 
 }

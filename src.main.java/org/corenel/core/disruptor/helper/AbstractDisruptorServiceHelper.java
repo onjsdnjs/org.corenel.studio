@@ -1,17 +1,20 @@
 package org.corenel.core.disruptor.helper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.camel.Exchange;
 import org.corenel.core.common.ApplicationConstants;
+import org.corenel.core.common.domain.Response;
+import org.corenel.core.common.domain.ServiceResponse;
 import org.corenel.core.common.helper.GenericServiceHelper;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
+import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
 import org.corenel.core.disruptor.executor.DefaultDisruptorExecutor;
 import org.corenel.core.disruptor.factory.DefaultEventFactory;
 import org.corenel.core.disruptor.handler.DispatcherHandler;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.lmax.disruptor.EventHandler;
 
@@ -53,6 +56,7 @@ public abstract class AbstractDisruptorServiceHelper extends GenericServiceHelpe
 		
 		getDisruptorExecutor().setThreadName(getServiceContext().getBean(ApplicationConstants.SERVICE_CLASS_TYPE, ServiceHelper.class).getClass().getName());
 		publishEvent();
+			
 	}
 	
 	@Override

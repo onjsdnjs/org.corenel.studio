@@ -24,7 +24,7 @@ public class DisruptorExceptionHandler implements ExceptionHandler {
 		str.append("Exception message: ");
 		str.append(ex.getMessage());
 		
-		throw new RuntimeException(ex);
+		throw new RuntimeException(str.toString(), ex);
 	}
 
 	@Override

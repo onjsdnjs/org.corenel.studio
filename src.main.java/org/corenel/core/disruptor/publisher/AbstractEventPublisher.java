@@ -15,12 +15,12 @@ public abstract class AbstractEventPublisher<T> implements EventPublisher<T> {
 	}
 
 	@Override
-	public void publish() {}
+	public void publish() throws Exception {}
 	@Override
-	public <A> void publish(A arg1) {}
+	public <A> void publish(A arg1) throws Exception {}
 	@Override
-	public <A, B> void publish(A arg1, B arg2) {}
+	public <A, B> void publish(A arg1, B arg2) throws Exception {}
 	@Override
-	public <A, B, C> void publish(A arg1, B arg2, C arg3) {}
+	public <A, B, C> void publish(A arg1, B arg2, C arg3) throws Exception {}
 	
 }
