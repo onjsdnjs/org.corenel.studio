@@ -41,7 +41,7 @@ public class ServiceCRUDTest {
 		TestServiceHelper testHelper = serviceContext.getServiceHelperBean(TestServiceHelper.class.getName(), TestServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.addServiceHelperChain(testHelper);
+		pipeline.attachServiceHelperChain(testHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		producer.requestBody("direct:service:pipeline", pipeline);

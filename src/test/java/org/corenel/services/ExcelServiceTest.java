@@ -52,7 +52,7 @@ public class ExcelServiceTest {
     	excelServiceHelper.setFieldValues(fieldValues);
     	
     	Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.addServiceHelperChain(excelServiceHelper);
+		pipeline.attachServiceHelperChain(excelServiceHelper);
     	
     	ProducerTemplate producer = camelContext.createProducerTemplate();
     	producer.requestBody("direct:service:pipeline", pipeline);

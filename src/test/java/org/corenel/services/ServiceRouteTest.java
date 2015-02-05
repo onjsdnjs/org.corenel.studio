@@ -14,6 +14,8 @@ import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -21,13 +23,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})
 public class ServiceRouteTest {
 	
+	Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Resource(name = "serviceContext")
 	private Context<String, Object> serviceContext;
 
 	@Resource(name = "serviceHelperFactory")
 	private ServiceHelperFactory serviceHelperFactory;
 	 
-	 /** CamelContext */
     @Resource(name = "camelContext")
     private CamelContext camelContext;
 
@@ -37,19 +40,21 @@ public class ServiceRouteTest {
 	}
 	
 	@Test
-	public void routeServiceChainTest() throws CloneNotSupportedException{
+	public void routeServiceChainTest() throws Exception{
 		
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
-		DefaultFileServiceHelper fileServiceHelper = serviceContext.getServiceHelperBean(DefaultFileServiceHelper.class.getName(), DefaultFileServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
+		DefaultFileServiceHelper fileServiceHelper = serviceContext.getServiceHelperBean(DefaultFileServiceHelper.class.getName(), DefaultFileServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.addServiceHelperChain(batchServiceHelper);
-		pipeline.addServiceHelperChain(fileServiceHelper);
-		pipeline.addServiceHelperChain(ftpServiceHelper);
+//		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+//		pipeline.attachServiceHelperChain(fileServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		producer.requestBody("direct:service:pipeline", pipeline);
+		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		
+		logger.info(result.getResult().getMessage().toString());
 		
 	}
 	
