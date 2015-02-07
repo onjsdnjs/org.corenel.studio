@@ -1,19 +1,16 @@
 package org.corenel.services;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
-
 import org.apache.camel.CamelContext;
-import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.context.Context;
 import org.corenel.core.context.boot.ComponentInitializer;
-import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.service.BatchService;
 import org.corenel.services.excel.service.ExcelService;
 import org.corenel.services.file.service.FileService;
@@ -152,7 +149,7 @@ public class ServiceContextInitializer implements Serializable, ComponentInitial
 	@Override
 	public void initialize() throws Exception {
 		
-		logger.info(">> ServiceInitializer initialize()...");
+		logger.info(">> ServiceInitializer initializing()...");
 		toString();
 		
 		Map<String, Object> beanMap = new HashMap<String, Object>();
@@ -174,12 +171,6 @@ public class ServiceContextInitializer implements Serializable, ComponentInitial
 		beanMap.put(ApplicationConstants.SERVICE_DISPATCHER, serviceDispatcher); 
 		
     	serviceContext.initializingBean(beanMap);
-    	
-    	logger.info(">> serviceContextBoot().. ");
-		
-		ProducerTemplate producer = camelContext.createProducerTemplate();
-		producer.sendBody("direct:service:boot", serviceContext);
-		
 	}
 
 	@Override
