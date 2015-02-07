@@ -7,6 +7,9 @@ import java.util.concurrent.TimeUnit;
 import com.lmax.disruptor.TimeoutException;
 import com.lmax.disruptor.dsl.Disruptor;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public abstract class AbstractDisruptorLifecycleManager<T> implements DisruptorLifecycle<T>{
 
 	private Disruptor<T> disruptor;

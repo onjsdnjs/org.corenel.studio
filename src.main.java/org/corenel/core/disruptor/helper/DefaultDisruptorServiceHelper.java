@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
-
  * @author Á¤¼ö¿ø
  */
 @SuppressWarnings({"serial"})

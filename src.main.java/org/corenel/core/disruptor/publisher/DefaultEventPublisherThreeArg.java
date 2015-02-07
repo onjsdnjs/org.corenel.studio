@@ -5,6 +5,9 @@ import org.corenel.core.disruptor.translator.DefultEventTranslatorThreeArg;
 
 import com.lmax.disruptor.EventTranslatorThreeArg;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("hiding")
 public class DefaultEventPublisherThreeArg<T,A,B,C> extends AbstractEventPublisher<T> implements EventPublisher<T> {
 	

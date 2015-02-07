@@ -6,6 +6,9 @@ import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @Component("servicePipelineFactory")
 public class ServicePipelineFactory{
 	

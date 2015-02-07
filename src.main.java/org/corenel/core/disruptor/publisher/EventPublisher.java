@@ -1,5 +1,8 @@
 package org.corenel.core.disruptor.publisher;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public interface EventPublisher<T> {
 
 	void publish() throws Exception;

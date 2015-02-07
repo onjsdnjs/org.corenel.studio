@@ -1,6 +1,8 @@
 package org.corenel.core.message;
 
-
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class MessageEvent {
 
 	private TextMessage textMessage;

@@ -9,6 +9,9 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.EventHandlerGroup;
 import com.lmax.disruptor.dsl.ProducerType;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class DisruptorWrapper<T> extends Disruptor<T> {
 
 	public DisruptorWrapper(final EventFactory<T> eventFactory,

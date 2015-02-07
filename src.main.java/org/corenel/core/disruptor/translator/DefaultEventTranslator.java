@@ -2,6 +2,9 @@ package org.corenel.core.disruptor.translator;
 
 import com.lmax.disruptor.EventTranslator;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class DefaultEventTranslator<T> implements EventTranslator<T> {
 	
 	@Override

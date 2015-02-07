@@ -9,6 +9,9 @@ import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.EventTranslatorThreeArg;
 import com.lmax.disruptor.EventTranslatorTwoArg;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public interface DisruptorExecutor<T> extends Serializable {
 
 	void publish(EventTranslator<T> eventTranslator) throws Exception;

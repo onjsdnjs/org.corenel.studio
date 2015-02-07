@@ -25,6 +25,9 @@ import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.EventHandlerGroup;
 import com.lmax.disruptor.dsl.ProducerType;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings({"serial","unchecked"})
 public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLifecycleManager<T> implements DisruptorExecutor<T>  {
 	

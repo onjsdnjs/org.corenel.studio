@@ -4,6 +4,9 @@ import org.corenel.core.message.CommandMessage;
 
 import com.lmax.disruptor.EventTranslatorTwoArg;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class DefultEventTranslatorTwoArg<T,A,B> implements EventTranslatorTwoArg<T,A,B> {
 	
 	@Override

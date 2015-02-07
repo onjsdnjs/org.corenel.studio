@@ -1,7 +1,6 @@
 package org.corenel.core.handler;
 
 /**
-
  * @author Á¤¼ö¿ø
  */
 public interface Handler {

@@ -1,9 +1,10 @@
 package org.corenel.core.disruptor.exception;
 
-
-
 import com.lmax.disruptor.ExceptionHandler;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class DisruptorExceptionHandler implements ExceptionHandler {
 	
 	protected String errorPrefix = "Ringbuffer Disruptor failed for thread: ";

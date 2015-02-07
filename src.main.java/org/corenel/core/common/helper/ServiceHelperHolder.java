@@ -1,5 +1,8 @@
 package org.corenel.core.common.helper;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class ServiceHelperHolder<T> {
 
 	private ServiceHelper serviceHelper;

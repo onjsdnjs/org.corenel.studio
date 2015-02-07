@@ -2,6 +2,9 @@ package org.corenel.core.disruptor.factory;
 
 import com.lmax.disruptor.EventFactory;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("unchecked")
 public class DefaultEventFactory<T> implements EventFactory<T>{
 	

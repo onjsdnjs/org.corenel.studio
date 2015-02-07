@@ -2,6 +2,9 @@ package org.corenel.core.common;
 
 import java.io.Serializable;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("serial")
 public class ApplicationConstants implements Serializable{
 	

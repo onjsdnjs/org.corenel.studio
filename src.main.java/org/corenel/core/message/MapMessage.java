@@ -2,7 +2,9 @@ package org.corenel.core.message;
 
 import java.util.Map;
 
-
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("serial")
 public class MapMessage  extends CommandMessage{
 

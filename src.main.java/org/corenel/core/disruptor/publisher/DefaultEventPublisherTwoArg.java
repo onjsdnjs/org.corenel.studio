@@ -5,6 +5,9 @@ import org.corenel.core.disruptor.translator.DefultEventTranslatorTwoArg;
 
 import com.lmax.disruptor.EventTranslatorTwoArg;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("hiding")
 public class DefaultEventPublisherTwoArg<T,A,B> extends AbstractEventPublisher<T> implements EventPublisher<T> {
 	

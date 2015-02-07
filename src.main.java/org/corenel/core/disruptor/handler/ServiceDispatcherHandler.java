@@ -7,6 +7,9 @@ import org.corenel.core.common.helper.ServiceHelperHolder;
 
 import com.lmax.disruptor.EventHandler;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("unchecked")
 public class ServiceDispatcherHandler<T> implements EventHandler<T> {
 	

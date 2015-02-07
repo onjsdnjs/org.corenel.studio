@@ -5,7 +5,6 @@ import org.corenel.core.reflect.builder.ReflectionBuilder;
 import org.corenel.core.reflect.builder.ReflectionBuilderFactory;
 
 /**
-
  * @author Á¤¼ö¿ø
  */
 @SuppressWarnings({"serial"})

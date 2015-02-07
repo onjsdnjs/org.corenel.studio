@@ -9,6 +9,9 @@ import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.EventTranslatorThreeArg;
 import com.lmax.disruptor.EventTranslatorTwoArg;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("serial")
 public class DefaultDisruptorExecutor<T> extends AbstractDisruptorExecutor<T>{
 	

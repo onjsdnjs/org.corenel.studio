@@ -2,6 +2,9 @@ package org.corenel.core.common;
 
 import java.util.Map;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 @SuppressWarnings("serial")
 public class ServiceExceptionResolver extends RuntimeException{
 	

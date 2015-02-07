@@ -4,6 +4,9 @@ import org.apache.commons.lang.ArrayUtils;
 
 import com.lmax.disruptor.EventHandler;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class EventHandlerChain<T> implements HandlerChain<T> {
 
 	private EventHandler<T>[] currentEventHandlers;

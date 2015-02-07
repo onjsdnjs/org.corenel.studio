@@ -2,6 +2,9 @@ package org.corenel.core.disruptor.publisher;
 
 import org.corenel.core.disruptor.executor.DisruptorExecutor;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public abstract class AbstractEventPublisher<T> implements EventPublisher<T> {
 	
 	private DisruptorExecutor<T> disruptorExecutor;

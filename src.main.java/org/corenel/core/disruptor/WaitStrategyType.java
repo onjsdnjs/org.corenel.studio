@@ -7,6 +7,9 @@ import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.YieldingWaitStrategy;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public enum WaitStrategyType {
 	
         BLOCKING {

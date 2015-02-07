@@ -3,6 +3,9 @@ package org.corenel.core.disruptor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author Á¤¼ö¿ø
+ */
 public class NamedThreadFactory implements ThreadFactory {
 	
 	private static final AtomicInteger THREAD_COUNTER = new AtomicInteger(0);
