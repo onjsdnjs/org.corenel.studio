@@ -3,6 +3,7 @@ package org.corenel.core.common.helper;
 public class ServiceHelperHolder<T> {
 
 	private ServiceHelper serviceHelper;
+	private ServiceHelper[] serviceHelpers;
 
 	public ServiceHelper getServiceHelper() {
 		return serviceHelper;
@@ -11,5 +12,12 @@ public class ServiceHelperHolder<T> {
 	public void setServiceHelper(T message) {
 		this.serviceHelper = (ServiceHelper) message;
 	}
-	
+
+	public ServiceHelper[] getServiceHelpers() {
+		return serviceHelpers;
+	}
+
+	public void setServiceHelpers(ServiceHelper[] serviceHelpers) {
+		this.serviceHelpers = serviceHelpers;
+	}
 }

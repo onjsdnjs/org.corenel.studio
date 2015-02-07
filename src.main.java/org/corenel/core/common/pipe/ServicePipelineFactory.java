@@ -2,8 +2,6 @@ package org.corenel.core.common.pipe;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import org.apache.poi.hssf.record.formula.functions.T;
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.springframework.stereotype.Component;
@@ -18,8 +16,11 @@ public class ServicePipelineFactory{
 	static class ServicePipeline implements Pipeline {
 		
 		private Response response;
+		private boolean isInterWorking = false;
 		
 		static Queue<ServiceHelper> serviceQueue = new LinkedBlockingQueue<ServiceHelper>();
+
+		static ServiceHelper[] serviceList ;
 		
 		@Override
 		public void attachServiceHelperChain(ServiceHelper serviceHelper) {
@@ -36,6 +37,15 @@ public class ServicePipelineFactory{
 			return serviceQueue;
 		}
 
+		public void setServiceList(ServiceHelper[] serviceList) {
+			ServicePipeline.serviceList = serviceList;
+		}
+		
+		public ServiceHelper[] getServiceList() {
+			return serviceList;
+		}
+
+
 		@Override
 		public void setResult(Response response) {
 			this.response = response;
@@ -46,5 +56,14 @@ public class ServicePipelineFactory{
 			return response;
 		}
 
+		@Override
+		public boolean isInterWorking() {
+			return isInterWorking;
+		}
+
+		@Override
+		public void setInterWorking(boolean isInterWorking) {
+			this.isInterWorking = isInterWorking;
+		}
 	}
 }

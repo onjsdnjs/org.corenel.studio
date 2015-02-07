@@ -6,8 +6,8 @@ import java.util.Queue;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
+import org.apache.commons.lang.ArrayUtils;
 import org.corenel.core.common.ApplicationConstants;
-import org.corenel.core.common.domain.ServiceResponse;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
@@ -31,31 +31,34 @@ public class ContextServiceHandlerResolver implements Processor{
 		
 		logger.info("ContextServiceHandlerResolver process()..");
 		
+		serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
 		disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 		disruptorHelper.getDisruptorExecutor().start();
-		
 
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
-		ServiceHelper serviceHelper = pipeline.dettachServiceHelperChain();
-		
-		if(!StringUtils.isEmpty(serviceHelper)){
-			
-			serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, serviceHelper);
-			serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
-			
-			logger.info("ServiceHelper:{}", serviceHelper.getClass().getName());
-			
-			disruptorHelper.handleService();
-			disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
-		}
-		
 		Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
-		if(!serviceQueue.isEmpty()){
-			ProducerTemplate producer = exchange.getContext().createProducerTemplate();
-			producer.requestBody("direct:service:pipeline", pipeline);
-
+		
+		if(pipeline.isInterWorking()){
+			ServiceHelper[] serviceHelpers = pipeline.getServiceList();
+			if(!ArrayUtils.isEmpty(serviceHelpers)){
+				serviceContext.putBean(ApplicationConstants.INTERWORKING_CLASS_TYPE, serviceHelpers);
+				disruptorHelper.handleService();
+				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
+			}
 		}else{
-			logger.info("Disruptor has shutDown().");
+			
+			ServiceHelper serviceHelper = pipeline.dettachServiceHelperChain();
+			if(!StringUtils.isEmpty(serviceHelper)){
+				serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, serviceHelper);
+				disruptorHelper.handleService();
+				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
+				logger.info("Disruptor has shutDown().");
+			}
+			
+			if(!serviceQueue.isEmpty()){
+				ProducerTemplate producer = exchange.getContext().createProducerTemplate();
+				producer.requestBody("direct:service:pipeline", pipeline);
+			}
 		}
 	}
 }
