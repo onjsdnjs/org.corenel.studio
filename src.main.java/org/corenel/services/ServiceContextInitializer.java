@@ -13,6 +13,7 @@ import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.context.Context;
 import org.corenel.core.context.boot.ComponentInitializer;
+import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.service.BatchService;
 import org.corenel.services.excel.service.ExcelService;
 import org.corenel.services.file.service.FileService;

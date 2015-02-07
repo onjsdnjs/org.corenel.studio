@@ -33,7 +33,6 @@ public abstract class AbstractFtpServiceHelper extends GenericServiceHelper impl
 	
 	@Override
 	public void executeService() throws Exception{
-		throw new Exception("ftp: 파일 업로드에 실패하였습니다.");
 	}
 
 	@Override
@@ -43,8 +42,7 @@ public abstract class AbstractFtpServiceHelper extends GenericServiceHelper impl
 		
 //		try {
 			
-			executeService();
-			new Exception("ftp: 파일 업로드에 실패하였습니다.");
+//			executeService();
 			
 		/*} catch (Exception e) {
 			

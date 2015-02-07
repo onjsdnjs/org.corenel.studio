@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="EUC-KR"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:camel="http://camel.apache.org/schema/spring"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+				http://camel.apache.org/schema/spring
+       			http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<!-- ******************************************************************************************* -->
+	<!--  ActiveMQ Component -->
+	<!-- ******************************************************************************************* -->
+	<!-- <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://127.0.0.1:61616" />
+	</bean>
+
+	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" init-method="start" destroy-method="stop">
+		<property name="maxConnections" value="8" />
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+	</bean>
+
+	<bean id="jmsConfig" class="org.apache.camel.component.jms.JmsConfiguration">
+		<property name="connectionFactory" ref="pooledConnectionFactory" />
+		<property name="concurrentConsumers" value="5" />
+	</bean>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="configuration" ref="jmsConfig" />
+		
+        <property name="transacted" value="true" />
+        <property name="cacheLevelName" value="CACHE_CONSUMER" />
+        
+		if we are using transacted then enable CACHE_CONSUMER (if not using 
+			XA) to run faster see more details at: http://camel.apache.org/jms <property 
+			name="transacted" value="true"/> <property name="cacheLevelName" value="CACHE_CONSUMER" 
+			/>
+	</bean> -->
+	
+	<camel:camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring" />
+	
+</beans>
