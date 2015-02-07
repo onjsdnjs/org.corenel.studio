@@ -4,10 +4,10 @@ import com.lmax.disruptor.EventHandler;
 
 public interface HandlerChain<T> {
 	
-	public EventHandler<T>[] getCurrentEventHandlers();
+	EventHandler<T>[] getCurrentEventHandlers();
 	
-	public EventHandler<T>[] getNextEventHandlers();
+	EventHandler<T>[] getNextEventHandlers();
 	
-	public EventHandler<T>[] getAfterEventHandlers();
+	EventHandler<T>[] getAfterEventHandlers();
 	
 }

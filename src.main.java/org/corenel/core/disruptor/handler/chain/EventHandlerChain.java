@@ -34,12 +34,16 @@ public class EventHandlerChain<T> implements HandlerChain<T> {
 		return afterEventHandlers;
 	}
 
-	public String printDependencyGraph() {
+	public String printEventChainFlow() {
 		StringBuilder str = new StringBuilder();
 		
 		if(! ArrayUtils.isEmpty(getCurrentEventHandlers())){
 			printEventHandlers(str, getCurrentEventHandlers());
 		}
+
+		/*if(! ArrayUtils.isEmpty(getAfterEventHandlers())){
+			printEventHandlers(str, getAfterEventHandlers());
+		}*/
 		
 		if(! ArrayUtils.isEmpty(getNextEventHandlers())){
 			str.append(" -> ");	

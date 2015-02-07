@@ -13,13 +13,12 @@ import org.corenel.core.common.helper.GenericServiceHelper;
 import org.corenel.core.context.Context;
 
 /**
-
  * @author Á¤¼ö¿ø
  */
 
 @SuppressWarnings({"serial","unchecked"})
 @Component("serviceHelperFactory")
-public class DefaultServiceHelperFactory implements ServiceHelperFactory {
+public class DefaultServiceHelperFactory extends AbstractServiceHelperFactory {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	

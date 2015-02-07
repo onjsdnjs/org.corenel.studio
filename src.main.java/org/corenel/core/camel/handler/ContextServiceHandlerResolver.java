@@ -20,9 +20,10 @@ public class ContextServiceHandlerResolver implements Processor{
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	private Context<String, Object> serviceContext;
+	private DefaultDisruptorServiceHelper disruptorHelper;
 	
-	public ContextServiceHandlerResolver(Context<String, Object> serviceContext) {
-		this.serviceContext = serviceContext;
+	public ContextServiceHandlerResolver(Context<String, Object> context) {
+		serviceContext = context;
 	}
 
 	@Override
@@ -30,9 +31,12 @@ public class ContextServiceHandlerResolver implements Processor{
 		
 		logger.info("ContextServiceHandlerResolver process()..");
 		
+		disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
+		disruptorHelper.getDisruptorExecutor().start();
+		
+
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		ServiceHelper serviceHelper = pipeline.dettachServiceHelperChain();
-		DefaultDisruptorServiceHelper disruptor = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 		
 		if(!StringUtils.isEmpty(serviceHelper)){
 			
@@ -41,7 +45,8 @@ public class ContextServiceHandlerResolver implements Processor{
 			
 			logger.info("ServiceHelper:{}", serviceHelper.getClass().getName());
 			
-			disruptor.handleService();
+			disruptorHelper.handleService();
+			disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
 		}
 		
 		Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
@@ -50,7 +55,6 @@ public class ContextServiceHandlerResolver implements Processor{
 			producer.requestBody("direct:service:pipeline", pipeline);
 
 		}else{
-			disruptor.getDisruptorExecutor().awaitAndShutdown(10000);
 			logger.info("Disruptor has shutDown().");
 		}
 	}

@@ -2,6 +2,8 @@ package org.corenel.core.disruptor.executor;
 
 import java.io.Serializable;
 
+import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
+
 import com.lmax.disruptor.EventTranslator;
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.EventTranslatorThreeArg;
@@ -17,8 +19,10 @@ public interface DisruptorExecutor<T> extends Serializable {
 	
 	<A, B, C> void publish(EventTranslatorThreeArg<T,A,B,C> eventTranslator, A arg1, B arg2, C arg3) throws Exception; 
 	
-	void disruptorEventHandler();
+	void disruptorEventHandlerChain();
 	
 	void disruptorExceptionHandler();
+	
+	void setEventHandlerChain(EventHandlerChain<T>[] handlerChain);
 
 }

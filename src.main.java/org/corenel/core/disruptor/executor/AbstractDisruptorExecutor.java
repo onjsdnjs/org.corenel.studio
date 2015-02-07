@@ -5,16 +5,20 @@ import java.util.concurrent.Executors;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.Validate;
 import org.corenel.core.common.ApplicationConstants;
+import org.corenel.core.common.helper.ServiceHelper;
+import org.corenel.core.common.helper.ServiceHelperHolder;
 import org.corenel.core.context.Context;
 import org.corenel.core.disruptor.NamedThreadFactory;
 import org.corenel.core.disruptor.WaitStrategyType;
 import org.corenel.core.disruptor.exception.DisruptorExceptionHandler;
+import org.corenel.core.disruptor.handler.ServiceDispatcherHandler;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
 import org.corenel.core.disruptor.manager.AbstractDisruptorLifecycleManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.lmax.disruptor.EventFactory;
+import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.EventTranslator;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
@@ -89,23 +93,20 @@ public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLife
 	}
 	
 	@Override
-	public void init(){
+	public void start(){
 		
-//		Validate.notNull(getThreadName());
 		Validate.notNull(getEventFactory());
 		
 		createThreadExecutor();
 		configureDisruptor();
-		
+		disruptorEventHandlerChain();
 		disruptorExceptionHandler();
-		disruptorEventHandler();
-		
 		getDisruptor().start();
 	}
 	
 	private void configureDisruptor(){
 		
-//		getDisruptorConfiguration();
+		getDisruptorConfiguration();
 		
 		Disruptor<T> disruptorWrapper = new DisruptorWrapper<T>(getEventFactory(),
 				getRingBufferSize(),
@@ -121,24 +122,41 @@ public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLife
 		super.setExecutor(Executors.newCachedThreadPool(new NamedThreadFactory(getThreadName())));
 	}
 	
-	@Override
-	public void disruptorEventHandler() {
-		Validate.notEmpty(serviceContext.getBean(ApplicationConstants.EVENT_HANDLER_CHAIN + Thread.currentThread().getId(), EventHandlerChain[].class), "Define a Event Handler Chain.");
-		disruptorEventHandlerChain();
+	private boolean disruptorEventHandler() {
+		
+		boolean hasChain = false;
+		EventHandlerChain<ServiceHelper>[] handlerChain = serviceContext.getBean(ApplicationConstants.EVENT_HANDLER_CHAIN + String.valueOf(Thread.currentThread().getId()), EventHandlerChain[].class);
+		if(handlerChain != null){
+			hasChain = true;
+		};
+		return hasChain;
 	}
 	
 	@Override
 	public void disruptorExceptionHandler(){
 		getDisruptor().handleExceptionsWith(new DisruptorExceptionHandler(getThreadName()));
 	}
-	
+
+	@Override
 	public void setEventHandlerChain(EventHandlerChain<T>[] handlerChain) {
-		serviceContext.putBean(ApplicationConstants.EVENT_HANDLER_CHAIN + Thread.currentThread().getId(), handlerChain);
+		serviceContext.putBean(ApplicationConstants.EVENT_HANDLER_CHAIN + String.valueOf(Thread.currentThread().getId()), handlerChain);
 	}
 	
-	private void disruptorEventHandlerChain(){
+	private String getThreadName() {
+		return getClass().getSimpleName() + "_"+  String.valueOf(Thread.currentThread().getId());
+	}
+	
+	public void disruptorEventHandlerChain(){
 		
-		EventHandlerChain<T>[] eventHandlersChain = serviceContext.getBean(ApplicationConstants.EVENT_HANDLER_CHAIN + Thread.currentThread().getId(), EventHandlerChain[].class);
+		if(!disruptorEventHandler()){
+			
+			ServiceDispatcherHandler<ServiceHelperHolder<ServiceHelper>> handler = new ServiceDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+			EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+			eventHandlerChain.setCurrentEventHandlers(new EventHandler[]{handler});
+			setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain});
+		}
+		
+		EventHandlerChain<T>[] eventHandlersChain = serviceContext.getBean(ApplicationConstants.EVENT_HANDLER_CHAIN + String.valueOf(Thread.currentThread().getId()), EventHandlerChain[].class);
 		
 		for(int i=0;i<eventHandlersChain.length;i++){
 		
@@ -162,17 +180,17 @@ public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLife
 			}
 		}
 		
-//		getEventProcessorGraph();
+		getEventProcessorGraph();
 	}
 	
 	public String getEventProcessorGraph(){
 		
 		StringBuilder str = new StringBuilder();
 		
-		EventHandlerChain<T>[] eventHandlersChain = serviceContext.getBean(ApplicationConstants.EVENT_HANDLER_CHAIN + Thread.currentThread().getId(), EventHandlerChain[].class);
+		EventHandlerChain<T>[] eventHandlersChain = serviceContext.getBean(ApplicationConstants.EVENT_HANDLER_CHAIN + String.valueOf(Thread.currentThread().getId()), EventHandlerChain[].class);
 		for(int i=0;i<eventHandlersChain.length;i++){
 			str.append("\n");
-			str.append(eventHandlersChain[i].printDependencyGraph());
+			str.append(eventHandlersChain[i].printEventChainFlow());
 		}
 		
 		logger.info(str.toString());

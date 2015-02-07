@@ -11,9 +11,8 @@ public abstract class AbstractDisruptorLifecycleManager<T> implements DisruptorL
 
 	private Disruptor<T> disruptor;
 	private ExecutorService executor;
-	private String threadName;
 	
-	public abstract void init();
+	public abstract void start();
 	
 	@Override
 	public void controlledShutdown() {
@@ -50,14 +49,6 @@ public abstract class AbstractDisruptorLifecycleManager<T> implements DisruptorL
 		}
 	}
 
-	public void setThreadName(String threadName) {
-		this.threadName = threadName;
-	}
-	
-	public String getThreadName() {
-		return threadName;
-	}
-	
 	public Disruptor<T> getDisruptor() {
 		return disruptor;
 	}

@@ -5,7 +5,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.annotation.Resource;
+
 import org.apache.camel.CamelContext;
+import org.corenel.core.context.Context;
+import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -15,7 +19,11 @@ import org.springframework.stereotype.Component;
 @Component("coreContextInitializer")
 public class ContextInitializer implements Initializer, ApplicationContextAware, InitializingBean {
 
+	@Resource(name = "serviceContext")
+    private Context<String, Object> serviceContext;
+
 	private ApplicationContext applicationContext;
+	
 	private ConcurrentHashMap<String, CamelContext> camelContextMap;
 
 	@Override
