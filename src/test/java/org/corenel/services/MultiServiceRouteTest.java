@@ -14,10 +14,9 @@ import org.corenel.core.disruptor.handler.ServiceDispatcherHandler;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
 import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
+import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.SingleDispatcherHandler;
 import org.corenel.services.file.helper.DefaultFileServiceHelper;
 import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
 import org.junit.After;
@@ -33,7 +32,7 @@ import com.lmax.disruptor.EventHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})
-public class ServiceRouteTest {
+public class MultiServiceRouteTest {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -70,6 +69,40 @@ public class ServiceRouteTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void dispatcherHandlerChainTest() throws Exception{
+		
+		ServiceDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new ServiceDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>> currentHandlerAfterSkip = new ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>> nextHandler = new FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ firstHandler }); // current
+		eventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ secondHandler });// current
+		eventHandlerChain.setAfterEventHandlers(new EventHandler[]{ secondHandler }); // skip
+		eventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ currentHandlerAfterSkip });// current
+		eventHandlerChain.setNextEventHandlers(new EventHandler[]{ nextHandler });// next
+		
+
+		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
+		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain});
+
+		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
+		
+		Pipeline pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		
+		ProducerTemplate producer = camelContext.createProducerTemplate();
+		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		
+		logger.info(result.getResult().getMessage().toString());
+		
+	}
+	
 	@After
 	public void destory(){
 		
@@ -81,4 +114,5 @@ public class ServiceRouteTest {
 		}
 		
 	}
+	
 }

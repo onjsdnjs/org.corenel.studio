@@ -9,6 +9,7 @@ import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.common.pipe.ServicePipelineFactory;
 import org.corenel.core.context.Context;
 import org.corenel.services.helper.TestServiceHelper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public class ServiceCRUDTest {
 	}
 
 	@Test
-	public void addServiceHelperTest() throws Exception{
+	public void createServiceHelperTest() throws Exception{
 		
 		serviceHelperFactory.createServiceHelper(TestServiceHelper.class);
 		TestServiceHelper testHelper = serviceContext.getServiceHelperBean(TestServiceHelper.class.getName(), TestServiceHelper.class);
@@ -53,6 +54,18 @@ public class ServiceCRUDTest {
 		serviceContext.removeServiceHelperBean(TestServiceHelper.class.getName(), TestServiceHelper.class);
 		TestServiceHelper testHelper = serviceContext.getServiceHelperBean(TestServiceHelper.class.getName(), TestServiceHelper.class);
 		Assert.isNull(testHelper);
+	}
+	
+	@After
+	public void destory(){
+		
+		try {
+			
+			camelContext.stop();
+			
+		} catch (Exception e) {
+		}
+		
 	}
 	
 }
