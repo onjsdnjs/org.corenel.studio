@@ -33,7 +33,7 @@ public class ServicePipelineFactory{
 		}
 		
 		@Override
-		public ServiceHelper dettachServiceHelperChain() {
+		public ServiceHelper detachServiceHelperChain() {
 			return serviceQueue.poll();
 		}
 		

@@ -53,7 +53,7 @@ public class ContextServiceHandlerResolver implements Processor{
 			 * service independent by pipeline
 			 * */
 			case INDEPENDENT :
-				ServiceHelper serviceHelper = pipeline.dettachServiceHelperChain();
+				ServiceHelper serviceHelper = pipeline.detachServiceHelperChain();
 				serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, serviceHelper);
 				disruptorHelper.handleService();
 				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);

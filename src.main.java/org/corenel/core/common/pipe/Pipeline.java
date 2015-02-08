@@ -13,7 +13,7 @@ public interface Pipeline {
 
 	void attachServiceHelperChain(ServiceHelper serviceHelper);
 	
-	ServiceHelper dettachServiceHelperChain();
+	ServiceHelper detachServiceHelperChain();
 	
 	Queue<ServiceHelper> getServiceQueue();
 	
