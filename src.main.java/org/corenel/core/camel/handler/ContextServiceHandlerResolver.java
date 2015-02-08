@@ -6,7 +6,7 @@ import java.util.Queue;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.Validate;
 import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
@@ -14,7 +14,6 @@ import org.corenel.core.context.Context;
 import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
 public class ContextServiceHandlerResolver implements Processor{
 	
@@ -36,29 +35,35 @@ public class ContextServiceHandlerResolver implements Processor{
 		disruptorHelper.getDisruptorExecutor().start();
 
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
-		Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
+		Validate.notNull(pipeline);
 		
-		if(pipeline.isInterWorking()){
-			ServiceHelper[] serviceHelpers = pipeline.getServiceList();
-			if(!ArrayUtils.isEmpty(serviceHelpers)){
+		switch(pipeline.getServiceExecutorType()){
+			
+			/**
+			 * service to service by dispatcher
+			 * */
+			case INTERWORKING:
+				ServiceHelper[] serviceHelpers = pipeline.getServiceList();
 				serviceContext.putBean(ApplicationConstants.INTERWORKING_CLASS_TYPE, serviceHelpers);
 				disruptorHelper.handleService();
 				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
-			}
-		}else{
-			
-			ServiceHelper serviceHelper = pipeline.dettachServiceHelperChain();
-			if(!StringUtils.isEmpty(serviceHelper)){
+				break;
+
+			/**
+			 * service independent by pipeline
+			 * */
+			case INDEPENDENT :
+				ServiceHelper serviceHelper = pipeline.dettachServiceHelperChain();
 				serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, serviceHelper);
 				disruptorHelper.handleService();
 				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
 				logger.info("Disruptor has shutDown().");
-			}
-			
-			if(!serviceQueue.isEmpty()){
-				ProducerTemplate producer = exchange.getContext().createProducerTemplate();
-				producer.requestBody("direct:service:pipeline", pipeline);
-			}
+				
+				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
+				if(!serviceQueue.isEmpty()){
+					ProducerTemplate producer = exchange.getContext().createProducerTemplate();
+					producer.requestBody("direct:service:pipeline", pipeline);
+				}
 		}
 	}
 }

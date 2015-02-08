@@ -2,7 +2,9 @@ package org.corenel.core.common.pipe;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.corenel.core.common.domain.Response;
+import org.corenel.core.common.domain.ServiceExecutorType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,7 @@ public class ServicePipelineFactory{
 	static class ServicePipeline implements Pipeline {
 		
 		private Response response;
-		private boolean isInterWorking = false;
+		private ServiceExecutorType serviceExecutorType = ServiceExecutorType.INDEPENDENT;
 		
 		static Queue<ServiceHelper> serviceQueue = new LinkedBlockingQueue<ServiceHelper>();
 
@@ -59,14 +61,13 @@ public class ServicePipelineFactory{
 			return response;
 		}
 
-		@Override
-		public boolean isInterWorking() {
-			return isInterWorking;
+		public ServiceExecutorType getServiceExecutorType() {
+			return serviceExecutorType;
 		}
 
-		@Override
-		public void setInterWorking(boolean isInterWorking) {
-			this.isInterWorking = isInterWorking;
+		public void setServiceExecutorType(ServiceExecutorType serviceExecutorType) {
+			this.serviceExecutorType = serviceExecutorType;
 		}
+
 	}
 }

@@ -2,6 +2,7 @@ package org.corenel.core.disruptor.helper;
 
 import org.apache.camel.Exchange;
 import org.corenel.core.common.ApplicationConstants;
+import org.corenel.core.common.domain.ServiceExecutorType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
 import org.corenel.core.common.pipe.Pipeline;
@@ -30,7 +31,7 @@ public class DefaultDisruptorServiceHelper extends AbstractDisruptorServiceHelpe
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		EventPublisher<ServiceHelperHolder<ServiceHelper>> publisher = new DefaultEventPublisherOneArg<ServiceHelperHolder<ServiceHelper>,ServiceHelper>(getDisruptorExecutor());
 
-		if(pipeline.isInterWorking()){
+		if(pipeline.getServiceExecutorType() == ServiceExecutorType.INTERWORKING){
 			ServiceHelper[] serviceHelpers = getServiceContext().getBean(ApplicationConstants.INTERWORKING_CLASS_TYPE, ServiceHelper[].class);
 			for (ServiceHelper serviceHelper : serviceHelpers) {
 				publisher.publish(serviceHelper);

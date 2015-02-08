@@ -1,7 +1,9 @@
 package org.corenel.core.common.pipe;
 
 import java.util.Queue;
+
 import org.corenel.core.common.domain.Response;
+import org.corenel.core.common.domain.ServiceExecutorType;
 import org.corenel.core.common.helper.ServiceHelper;
 
 /**
@@ -23,7 +25,7 @@ public interface Pipeline {
 
 	Response getResult();
 
-	boolean isInterWorking();
+	ServiceExecutorType getServiceExecutorType();
 
-	void setInterWorking(boolean interWorking);
+	void setServiceExecutorType(ServiceExecutorType type);
 }
