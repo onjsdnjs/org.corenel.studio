@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
@@ -49,7 +50,7 @@ public class ServiceCRUDTest {
 		pipeline.setServiceList(new ServiceHelper[]{testHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		producer.requestBody("direct:service:pipeline", pipeline);
+		producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline);
 	}
 	
 	@Test
