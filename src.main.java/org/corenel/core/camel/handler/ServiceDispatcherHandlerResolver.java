@@ -41,7 +41,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 		
 		switch(pipeline.getServiceDispatcherType()){
 			
-			//calling service by client request
+			//calling service by client request : default
 			case requestService:
 				serviceHelpers = pipeline.getServiceList();
 				serviceContext.putBean(ApplicationConstants.REQUEST_SERVICE, serviceHelpers);
@@ -50,7 +50,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 				logger.info("Disruptor has shutDown().");
 				break;
 
-			//calling service in background 
+			//calling service in background
 			case daemonService :
 				ServiceHelper serviceHelper = pipeline.detachServiceHelperChain();
 				serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
