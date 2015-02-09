@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class ContextInitializer implements Initializer, ApplicationContextAware,
 		}
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		producer.sendBody("direct:service:boot", serviceContext);
+		producer.sendBody(ServiceExecutorType.Boot.toString(), serviceContext);
 		
 		logger.info(">> serviceContextBoot(). ");
 	}

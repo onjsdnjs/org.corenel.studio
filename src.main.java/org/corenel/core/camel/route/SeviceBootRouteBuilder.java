@@ -7,8 +7,8 @@ import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import org.corenel.core.camel.handler.ServiceBootHandlerResolver;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 
 @Component("seviceBootRouteBuilder")
@@ -25,7 +25,7 @@ public final class SeviceBootRouteBuilder extends RouteBuilder {
 		
 		logger.info(">> SeviceBootRouteBuilder configure().. ");	
 		
-		from("direct:service:boot")
+		from(ServiceExecutorType.Boot.toString())
 			.setExchangePattern(ExchangePattern.InOut)
 			.process(new ServiceBootHandlerResolver(serviceHelperFactory))
 			.end();
