@@ -56,6 +56,23 @@ public class HandlerChainRequestServiceTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void defaultChainByRequestServiceTest() throws Exception{
+
+		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
+		
+		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
+		
+		ProducerTemplate producer = camelContext.createProducerTemplate();
+		Pipeline<List<Object>> result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
+		
+		logger.info(result.getResult().getMessage().toString());
+		
+	}
+	
 	/** 
 	 * 이벤트 핸들러의 실행 순서가 다음과 같이 진행됩니다.
 	 * 각 서비스는 모든 핸들러를 수행하게 되고 firstHandler 와 fourthHandler 는 단일 스레드로 secondHandler1, secondHandler2 및
