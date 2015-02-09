@@ -7,7 +7,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.processor.StopProcessor;
-import org.corenel.core.camel.handler.ContextServiceHandlerResolver;
+import org.corenel.core.camel.handler.ServiceDispatcherHandlerResolver;
+import org.corenel.core.camel.handler.ServicePipelineHandlerResolver;
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.domain.ServiceResponse;
 import org.corenel.core.common.pipe.Pipeline;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component("serviceDispatcherRouteBuilder")
-public final class ServiceDispatcherRouteBuilder extends RouteBuilder {
+public final class ServiceExecutorRouteBuilder extends RouteBuilder {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -48,10 +49,15 @@ public final class ServiceDispatcherRouteBuilder extends RouteBuilder {
 			}
 		})
 		.end();
-
+		
 		from("direct:service:pipeline")
 		.setExchangePattern(ExchangePattern.InOut)
-		.process(new ContextServiceHandlerResolver(serviceContext))
+		.process(new ServicePipelineHandlerResolver(serviceContext))
+		.end();
+
+		from("direct:service:dispatcher")
+		.setExchangePattern(ExchangePattern.InOut)
+		.process(new ServiceDispatcherHandlerResolver(serviceContext))
 		.choice()
 				.when(simple("${header.status} == 'F'"))
 				.process(new StopProcessor() {

@@ -3,7 +3,7 @@ package org.corenel.core.context.boot;
 import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
-import org.corenel.core.camel.route.ServiceDispatcherRouteBuilder;
+import org.corenel.core.camel.route.ServiceExecutorRouteBuilder;
 import org.corenel.core.camel.route.SeviceBootRouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class CamelContextInitializer implements ComponentInitializer, Disposable
     private SeviceBootRouteBuilder seviceBootRouteBuilder;
 
     @Resource(name = "serviceDispatcherRouteBuilder")
-    private ServiceDispatcherRouteBuilder serviceDispatcherRouteBuilder;
+    private ServiceExecutorRouteBuilder serviceDispatcherRouteBuilder;
     
 	@Override
 	public void initialize() throws Exception {
