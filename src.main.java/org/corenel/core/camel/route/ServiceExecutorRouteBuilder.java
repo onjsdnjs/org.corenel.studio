@@ -1,6 +1,7 @@
 package org.corenel.core.camel.route;
 
 import javax.annotation.Resource;
+
 import org.apache.camel.AsyncCallback;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+@SuppressWarnings("rawtypes")
 @Component("serviceDispatcherRouteBuilder")
 public final class ServiceExecutorRouteBuilder extends RouteBuilder {
 	
