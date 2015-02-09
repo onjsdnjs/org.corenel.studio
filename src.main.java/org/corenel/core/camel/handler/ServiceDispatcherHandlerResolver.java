@@ -8,7 +8,6 @@ import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang.Validate;
 import org.corenel.core.common.ApplicationConstants;
-import org.corenel.core.common.domain.ServiceType;
 import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
