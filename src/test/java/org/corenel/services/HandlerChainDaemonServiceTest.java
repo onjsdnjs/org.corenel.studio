@@ -16,11 +16,13 @@ import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.common.pipe.ServicePipelineFactory;
 import org.corenel.core.context.Context;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
+import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
 import org.corenel.services.disruptor.handler.chain.FirstDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler1;
 import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler2;
+import org.corenel.services.disruptor.handler.chain.SingleDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler1;
 import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler2;
 import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
@@ -52,6 +54,37 @@ public class HandlerChainDaemonServiceTest {
 
 	@Before
 	public void contextSetting(){
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void dispatcherHandlerSingleChainByPipelineTest() throws Exception{
+		
+		SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>> singleHandler = new SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ singleHandler }); // current
+
+		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
+		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain});
+
+		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
+		
+		Pipeline<List<Object>>  pipeline = ServicePipelineFactory.newPipeline();
+		List<Object> batchService = new ArrayList<Object>();
+		batchService.add(batchServiceHelper);
+		batchService.add(new EventHandlerChain[]{eventHandlerChain});
+		
+		List<Object> ftpService = new ArrayList<Object>();
+		ftpService.add(ftpServiceHelper);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
+		
+		ProducerTemplate producer = camelContext.createProducerTemplate();
+		Pipeline<List<Object>>  result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
+		
+		logger.info(result.getResult().getMessage().toString());
 		
 	}
 	
