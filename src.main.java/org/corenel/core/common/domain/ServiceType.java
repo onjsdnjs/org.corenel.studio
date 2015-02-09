@@ -20,7 +20,7 @@ public class ServiceType{
 		Dispatcher {
 			  @Override
 			  public String toString() {
-				  return "direct:service:pipeline";
+				  return "direct:service:dispatcher";
 			  }
 		  },
 		
