@@ -41,37 +41,24 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 		
 		switch(pipeline.getServiceDispatcherType()){
 			
-			//calling service by publishing disruptor event
-			case disruptorEventPublisher:
+			//calling service by client request
+			case requestService:
 				serviceHelpers = pipeline.getServiceList();
-				serviceContext.putBean(ApplicationConstants.EVENT_PUBLISH, serviceHelpers);
+				serviceContext.putBean(ApplicationConstants.REQUEST_SERVICE, serviceHelpers);
 				disruptorHelper.handleService();
 				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
 				logger.info("Disruptor has shutDown().");
 				break;
 
-			//calling service by camel process
-			case routeProcessor:
-				serviceHelpers = pipeline.getServiceList();
-				for (ServiceHelper serviceHelper : serviceHelpers) {
-					serviceContext.putBean(ApplicationConstants.ROUTE_PROCESS, serviceHelper);
-					disruptorHelper.handleService();
-					disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
-					logger.info("Disruptor has shutDown().");
-				}
-				break;
-				
-			//calling service by recursive route
-			case routeProcessorRecursive :
+			//calling service in background 
+			case daemonService :
 				ServiceHelper serviceHelper = pipeline.detachServiceHelperChain();
 				serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
-				serviceContext.putBean(ApplicationConstants.ROUTE_PROCESS, serviceHelper);
+				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
 
 				disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 				disruptorHelper.getDisruptorExecutor().start();
 				disruptorHelper.handleService();
-				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
-				logger.info("Disruptor has shutDown().");
 				
 				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
 				if(!serviceQueue.isEmpty()){

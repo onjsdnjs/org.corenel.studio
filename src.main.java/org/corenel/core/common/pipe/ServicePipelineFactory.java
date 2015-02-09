@@ -1,6 +1,5 @@
 package org.corenel.core.common.pipe;
 
-
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.corenel.core.common.domain.Response;
@@ -21,7 +20,7 @@ public class ServicePipelineFactory{
 	static class ServicePipeline implements Pipeline {
 		
 		private Response response;
-		private ServiceDispatcherType serviceDispatcherType = ServiceDispatcherType.routeProcessor;
+		private ServiceDispatcherType serviceDispatcherType = ServiceDispatcherType.requestService;
 		
 		static Queue<ServiceHelper> serviceQueue = new LinkedBlockingQueue<ServiceHelper>();
 
@@ -49,7 +48,6 @@ public class ServicePipelineFactory{
 		public ServiceHelper[] getServiceList() {
 			return serviceList;
 		}
-
 
 		@Override
 		public void setResult(Response response) {

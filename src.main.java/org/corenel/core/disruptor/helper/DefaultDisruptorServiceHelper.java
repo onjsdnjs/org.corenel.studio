@@ -23,7 +23,7 @@ public class DefaultDisruptorServiceHelper extends AbstractDisruptorServiceHelpe
 	public DefaultDisruptorServiceHelper(Context<String, Object> context) {
 		super(context);
 	}
-	
+	 	
 	@Override
 	public void publishEvent() throws Exception{
 		
@@ -31,14 +31,14 @@ public class DefaultDisruptorServiceHelper extends AbstractDisruptorServiceHelpe
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		EventPublisher<ServiceHelperHolder<ServiceHelper>> publisher = new DefaultEventPublisherOneArg<ServiceHelperHolder<ServiceHelper>,ServiceHelper>(getDisruptorExecutor());
 
-		if(pipeline.getServiceDispatcherType() == ServiceDispatcherType.disruptorEventPublisher){
-			ServiceHelper[] serviceHelpers = getServiceContext().getBean(ApplicationConstants.EVENT_PUBLISH, ServiceHelper[].class);
+		if(pipeline.getServiceDispatcherType() == ServiceDispatcherType.requestService){
+			ServiceHelper[] serviceHelpers = getServiceContext().getBean(ApplicationConstants.REQUEST_SERVICE, ServiceHelper[].class);
 			for (ServiceHelper serviceHelper : serviceHelpers) {
 				publisher.publish(serviceHelper);
 			}
 		
 		}else{
-			ServiceHelper serviceHelper = getServiceContext().getBean(ApplicationConstants.ROUTE_PROCESS, ServiceHelper.class);
+			ServiceHelper serviceHelper = getServiceContext().getBean(ApplicationConstants.DAEMON_SERVICE, ServiceHelper.class);
 			publisher.publish(serviceHelper);
 		}
 		

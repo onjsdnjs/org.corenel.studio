@@ -4,7 +4,7 @@ public class ServiceType{
 
 	public enum ServiceDispatcherType {
 	
-		disruptorEventPublisher, routeProcessor, routeProcessorRecursive;
+		requestService, daemonService;
 		
 	}
 
