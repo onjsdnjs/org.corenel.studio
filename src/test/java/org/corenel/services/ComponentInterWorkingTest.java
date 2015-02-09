@@ -72,7 +72,7 @@ public class ComponentInterWorkingTest {
 		pipeline.setServiceExecutorType(ServiceExecutorType.INTERWORKING);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		

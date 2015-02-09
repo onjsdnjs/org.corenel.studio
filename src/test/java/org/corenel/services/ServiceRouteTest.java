@@ -1,23 +1,14 @@
 package org.corenel.services;
 
-import javax.annotation.Resource;
 
+import javax.annotation.Resource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.factory.ServiceHelperFactory;
-import org.corenel.core.common.helper.ServiceHelper;
-import org.corenel.core.common.helper.ServiceHelperHolder;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.common.pipe.ServicePipelineFactory;
 import org.corenel.core.context.Context;
-import org.corenel.core.disruptor.handler.ServiceDispatcherHandler;
-import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
-import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
-import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.SingleDispatcherHandler;
 import org.corenel.services.file.helper.DefaultFileServiceHelper;
 import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
 import org.junit.After;
@@ -28,8 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.lmax.disruptor.EventHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})

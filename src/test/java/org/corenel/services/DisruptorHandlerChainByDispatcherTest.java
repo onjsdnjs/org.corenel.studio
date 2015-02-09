@@ -32,7 +32,7 @@ import com.lmax.disruptor.EventHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})
-public class DisruptorHandlerChainTest {
+public class DisruptorHandlerChainByDispatcherTest {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -51,17 +51,16 @@ public class DisruptorHandlerChainTest {
 	}
 	
 	@Test
-	public void dispatcherHandlerDefaultChainTest() throws Exception{
+	public void dispatcherHandlerDefaultChainByDisppatcherTest() throws Exception{
 
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(batchServiceHelper);
-		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -69,7 +68,7 @@ public class DisruptorHandlerChainTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void dispatcherHandlerSingleChainTest() throws Exception{
+	public void dispatcherHandlerSingleChainByDisppatcherTest() throws Exception{
 		
 		SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>> singleHandler = new SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		
@@ -83,11 +82,10 @@ public class DisruptorHandlerChainTest {
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(batchServiceHelper);
-		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -95,7 +93,7 @@ public class DisruptorHandlerChainTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void dispatcherHandlerMultiChainTest() throws Exception {
+	public void dispatcherHandlerMultiChainByDisppatcherTest() throws Exception {
 		
 		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
@@ -119,11 +117,10 @@ public class DisruptorHandlerChainTest {
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(batchServiceHelper);
-		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
