@@ -38,13 +38,12 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		Validate.notNull(pipeline);
-		ServiceHelper[] serviceHelpers = null;
 		
 		switch(pipeline.getServiceDispatcherType()){
 			
 			//calling service by client request : default
 			case requestService:
-				serviceHelpers = pipeline.getServiceList();
+				ServiceHelper[] serviceHelpers = pipeline.getServiceList();
 				serviceContext.putBean(ApplicationConstants.REQUEST_SERVICE, serviceHelpers);
 				disruptorHelper.handleService();
 				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
@@ -58,7 +57,6 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
 
 				disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
-				disruptorHelper.getDisruptorExecutor().start();
 				disruptorHelper.handleService();
 				
 				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
