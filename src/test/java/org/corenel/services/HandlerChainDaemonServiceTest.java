@@ -80,8 +80,8 @@ public class HandlerChainDaemonServiceTest {
 		ftpService.add(ftpServiceHelper);
 		
 		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(batchService);
-		pipeline.attachServiceHelperChain(ftpService);
+		pipeline.attachServiceChain(batchService);
+		pipeline.attachServiceChain(ftpService);
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
@@ -138,8 +138,8 @@ public class HandlerChainDaemonServiceTest {
 		ftpService.add(new EventHandlerChain[]{eventHandlerChain1});
 		
 		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(batchService);
-		pipeline.attachServiceHelperChain(ftpService);
+		pipeline.attachServiceChain(batchService);
+		pipeline.attachServiceChain(ftpService);
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
