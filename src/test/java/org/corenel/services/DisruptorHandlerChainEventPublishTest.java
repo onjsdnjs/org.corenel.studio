@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
@@ -30,7 +31,7 @@ import com.lmax.disruptor.EventHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})
-public class ComponentInterWorkingTest {
+public class DisruptorHandlerChainEventPublishTest {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -70,10 +71,10 @@ public class ComponentInterWorkingTest {
 		 * */
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
 		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
-		pipeline.setServiceDispatcherType(ServiceDispatcherType.EventPublish);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.disruptorEventPublisher);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		

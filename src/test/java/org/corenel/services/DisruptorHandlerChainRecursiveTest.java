@@ -1,9 +1,12 @@
 package org.corenel.services;
 
+
 import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.corenel.core.common.domain.ServiceType;
+import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
@@ -35,7 +38,7 @@ import com.lmax.disruptor.EventHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})
-public class DisruptorHandlerChainByDispatcherTest {
+public class DisruptorHandlerChainRecursiveTest {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -54,13 +57,15 @@ public class DisruptorHandlerChainByDispatcherTest {
 	}
 	
 	@Test
-	public void dispatcherHandlerDefaultChainByDisppatcherTest() throws Exception{
+	public void dispatcherHandlerDefaultChainByPipelineTest() throws Exception{
 
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
+		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.routeProcessorRecursive);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
@@ -71,7 +76,7 @@ public class DisruptorHandlerChainByDispatcherTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void dispatcherHandlerSingleChainByDisppatcherTest() throws Exception{
+	public void dispatcherHandlerSingleChainByPipelineTest() throws Exception{
 		
 		SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>> singleHandler = new SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		
@@ -85,7 +90,9 @@ public class DisruptorHandlerChainByDispatcherTest {
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
+		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.routeProcessorRecursive);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
@@ -94,9 +101,15 @@ public class DisruptorHandlerChainByDispatcherTest {
 		
 	}
 	
+	/** 
+	 * Publisher -> Ring buffer --->   firstHandler  | secondHandler  -->  thirdHandle | fourthHandler
+	 *                           
+	 * Publisher -> Ring buffer --->   fourthHandler | thirdHandle  -->  secondHandler | firstHandler                          
+	 * 
+	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void dispatcherHandlerMultiChainByDisppatcherTest() throws Exception {
+	public void dispatcherHandlerMultiChainByPipelineTest() throws Exception {
 		
 		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
@@ -109,9 +122,9 @@ public class DisruptorHandlerChainByDispatcherTest {
 		eventHandlerChain.setNextEventHandlers(new EventHandler[]{ thirdHandler, fourthHandler });// next
 
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> reverseEventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
-		reverseEventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ thirdHandler,fourthHandler }); // current
+		reverseEventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ fourthHandler,thirdHandler}); // current
 		reverseEventHandlerChain.setAfterEventHandlers(new EventHandler[]{ fourthHandler }); // skip
-		reverseEventHandlerChain.setNextEventHandlers(new EventHandler[]{ firstHandler, secondHandler });// next
+		reverseEventHandlerChain.setNextEventHandlers(new EventHandler[]{ secondHandler, firstHandler });// next
 
 		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain, reverseEventHandlerChain});
@@ -120,7 +133,9 @@ public class DisruptorHandlerChainByDispatcherTest {
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
+		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.routeProcessorRecursive);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
@@ -128,8 +143,7 @@ public class DisruptorHandlerChainByDispatcherTest {
 		logger.info(result.getResult().getMessage().toString());
 		
 	}
-	
-	
+
 	/** 
 	 *                                              secondHandler1 -> thirdHandler1
 	 *                                             /                               \
@@ -172,7 +186,9 @@ public class DisruptorHandlerChainByDispatcherTest {
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
+		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.routeProcessorRecursive);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
