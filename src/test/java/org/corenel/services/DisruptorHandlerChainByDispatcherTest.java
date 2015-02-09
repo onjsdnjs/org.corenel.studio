@@ -15,9 +15,11 @@ import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
 import org.corenel.services.disruptor.handler.chain.FirstDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler;
+import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler1;
+import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler2;
 import org.corenel.services.disruptor.handler.chain.SingleDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler;
+import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler1;
+import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler2;
 import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -96,8 +98,8 @@ public class DisruptorHandlerChainByDispatcherTest {
 	public void dispatcherHandlerMultiChainByDisppatcherTest() throws Exception {
 		
 		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
-		SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
-		ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>> thirdHandler = new ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> thirdHandler = new ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
 		FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>> fourthHandler = new FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
@@ -113,6 +115,58 @@ public class DisruptorHandlerChainByDispatcherTest {
 		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain, reverseEventHandlerChain});
 
+		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
+		
+		Pipeline pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
+		
+		ProducerTemplate producer = camelContext.createProducerTemplate();
+		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
+		
+		logger.info(result.getResult().getMessage().toString());
+		
+	}
+	
+	
+	/** 
+	 *                                              secondHandler1 -> thirdHandler1
+	 *                                             /                               \
+	 * Publisher -> Ring buffer ---> firstHandler -                                 -> fourthHandler 
+	 *                                             \                               /
+	 *                                              secondHandler2 -> thirdHandler2
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	public void dispatcherHandlerComplexChainByPipelineTest() throws Exception {
+		
+		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler1 = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler2<ServiceHelperHolder<ServiceHelper>> secondHandler2 = new SecondDispatcherHandler2<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> thirdHandler1 = new ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler2<ServiceHelperHolder<ServiceHelper>> thirdHandler2 = new ThirdDispatcherHandler2<ServiceHelperHolder<ServiceHelper>>();
+		FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>> fourthHandler = new FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain1 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain1.setCurrentEventHandlers(new EventHandler[]{ firstHandler}); // current
+		eventHandlerChain1.setNextEventHandlers(new EventHandler[]{ secondHandler1,secondHandler2 });// next
+
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain2 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain2.setAfterEventHandlers(new EventHandler[]{ secondHandler1});// skip
+		eventHandlerChain2.setNextEventHandlers(new EventHandler[]{ thirdHandler1}); // next
+
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain3 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain3.setAfterEventHandlers(new EventHandler[]{secondHandler2});// skip
+		eventHandlerChain3.setNextEventHandlers(new EventHandler[]{ thirdHandler2}); // next
+
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain4 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain4.setAfterEventHandlers(new EventHandler[]{thirdHandler1, thirdHandler2});// current
+		eventHandlerChain4.setNextEventHandlers(new EventHandler[]{fourthHandler}); // skip
+		
+		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
+		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain1, eventHandlerChain2,eventHandlerChain3,eventHandlerChain4});
+		
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		

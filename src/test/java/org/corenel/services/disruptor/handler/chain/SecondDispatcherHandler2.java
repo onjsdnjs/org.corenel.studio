@@ -8,7 +8,7 @@ import org.corenel.core.common.helper.ServiceHelperHolder;
 import com.lmax.disruptor.EventHandler;
 
 @SuppressWarnings("unchecked")
-public class SecondDispatcherHandler<T> implements EventHandler<T> {
+public class SecondDispatcherHandler2<T> implements EventHandler<T> {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -14,8 +14,8 @@ import org.corenel.core.disruptor.handler.ServiceDispatcherHandler;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
 import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
-import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler;
+import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler1;
+import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler1;
 import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
 import org.corenel.services.file.helper.DefaultFileServiceHelper;
 import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
@@ -74,8 +74,8 @@ public class MultiServiceRouteTest {
 	public void dispatcherHandlerChainTest() throws Exception{
 		
 		ServiceDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new ServiceDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
-		SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
-		ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>> currentHandlerAfterSkip = new ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> currentHandlerAfterSkip = new ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
 		FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>> nextHandler = new FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();

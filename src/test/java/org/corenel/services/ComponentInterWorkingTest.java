@@ -1,10 +1,11 @@
 package org.corenel.services;
 
+
 import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
-import org.corenel.core.common.domain.ServiceExecutorType;
+import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
@@ -69,7 +70,7 @@ public class ComponentInterWorkingTest {
 		 * */
 		Pipeline pipeline = ServicePipelineFactory.newPipeline();
 		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
-		pipeline.setServiceExecutorType(ServiceExecutorType.INTERWORKING);
+		pipeline.setServiceDispatcherType(ServiceDispatcherType.EventPublish);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);

@@ -1,9 +1,12 @@
 package org.corenel.services;
 
+
 import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.corenel.core.common.domain.ServiceType;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
@@ -15,9 +18,11 @@ import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
 import org.corenel.services.disruptor.handler.chain.FirstDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler;
+import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler1;
+import org.corenel.services.disruptor.handler.chain.SecondDispatcherHandler2;
 import org.corenel.services.disruptor.handler.chain.SingleDispatcherHandler;
-import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler;
+import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler1;
+import org.corenel.services.disruptor.handler.chain.ThirdDispatcherHandler2;
 import org.corenel.services.ftp.helper.DefaultFtpServiceHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -61,7 +66,7 @@ public class DisruptorHandlerChainByPipelineTest {
 		pipeline.attachServiceHelperChain(ftpServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceType.ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -87,19 +92,25 @@ public class DisruptorHandlerChainByPipelineTest {
 		pipeline.attachServiceHelperChain(ftpServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceType.ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
 	}
 	
+	/** 
+	 * Publisher -> Ring buffer --->   firstHandler  | secondHandler  -->  thirdHandle | fourthHandler
+	 *                           
+	 * Publisher -> Ring buffer --->   fourthHandler | thirdHandle  -->  secondHandler | firstHandler                          
+	 * 
+	 */
 	@SuppressWarnings("unchecked")
 	@Test
 	public void dispatcherHandlerMultiChainByPipelineTest() throws Exception {
 		
 		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
-		SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
-		ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>> thirdHandler = new ThirdDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> thirdHandler = new ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
 		FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>> fourthHandler = new FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
@@ -108,9 +119,9 @@ public class DisruptorHandlerChainByPipelineTest {
 		eventHandlerChain.setNextEventHandlers(new EventHandler[]{ thirdHandler, fourthHandler });// next
 
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> reverseEventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
-		reverseEventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ thirdHandler,fourthHandler }); // current
+		reverseEventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ fourthHandler,thirdHandler}); // current
 		reverseEventHandlerChain.setAfterEventHandlers(new EventHandler[]{ fourthHandler }); // skip
-		reverseEventHandlerChain.setNextEventHandlers(new EventHandler[]{ firstHandler, secondHandler });// next
+		reverseEventHandlerChain.setNextEventHandlers(new EventHandler[]{ secondHandler, firstHandler });// next
 
 		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain, reverseEventHandlerChain});
@@ -123,7 +134,59 @@ public class DisruptorHandlerChainByPipelineTest {
 		pipeline.attachServiceHelperChain(ftpServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:pipeline", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceType.ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
+		
+		logger.info(result.getResult().getMessage().toString());
+		
+	}
+
+	/** 
+	 *                                              secondHandler1 -> thirdHandler1
+	 *                                             /                               \
+	 * Publisher -> Ring buffer ---> firstHandler -                                 -> fourthHandler 
+	 *                                             \                               /
+	 *                                              secondHandler2 -> thirdHandler2
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	public void dispatcherHandlerComplexChainByPipelineTest() throws Exception {
+		
+		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler1 = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		SecondDispatcherHandler2<ServiceHelperHolder<ServiceHelper>> secondHandler2 = new SecondDispatcherHandler2<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> thirdHandler1 = new ThirdDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
+		ThirdDispatcherHandler2<ServiceHelperHolder<ServiceHelper>> thirdHandler2 = new ThirdDispatcherHandler2<ServiceHelperHolder<ServiceHelper>>();
+		FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>> fourthHandler = new FourthDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
+		
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain1 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain1.setCurrentEventHandlers(new EventHandler[]{ firstHandler}); // current
+		eventHandlerChain1.setNextEventHandlers(new EventHandler[]{ secondHandler1,secondHandler2 });// next
+
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain2 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain2.setAfterEventHandlers(new EventHandler[]{ secondHandler1});// skip
+		eventHandlerChain2.setNextEventHandlers(new EventHandler[]{ thirdHandler1}); // next
+
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain3 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain3.setAfterEventHandlers(new EventHandler[]{secondHandler2});// skip
+		eventHandlerChain3.setNextEventHandlers(new EventHandler[]{ thirdHandler2}); // next
+
+		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain4 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
+		eventHandlerChain4.setAfterEventHandlers(new EventHandler[]{thirdHandler1, thirdHandler2});// current
+		eventHandlerChain4.setNextEventHandlers(new EventHandler[]{fourthHandler}); // skip
+		
+		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
+		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain1, eventHandlerChain2,eventHandlerChain3,eventHandlerChain4});
+		
+		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
+		
+		Pipeline pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.attachServiceHelperChain(batchServiceHelper);
+		pipeline.attachServiceHelperChain(ftpServiceHelper);
+		
+		ProducerTemplate producer = camelContext.createProducerTemplate();
+		Pipeline result = producer.requestBody(ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
