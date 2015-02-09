@@ -61,6 +61,9 @@ public class HandlerChainRequestServiceTest {
 	 * 각 서비스는 모든 핸들러를 수행하게 되고 firstHandler 와 fourthHandler 는 단일 스레드로 secondHandler1, secondHandler2 및
 	 * thirdHandler1, thirdHandler2 는 두개의 스레드로 동시에 수행하게 됩니다.  
 	 * 
+	 * batchService 와 ftpService 모두 동일한 핸들러의 흐름을 수행하게 됩니다.
+	 * 만약 각 서비스마다 다른 핸들러의 흐름을 수행하고자 할 경우에는 HandlerChainDaemonServiceTest 를 참조하여 설정하면 됩니다.
+	 * 
 	 *                                              secondHandler1 -> thirdHandler1
 	 *                                             /                               \
 	 * Publisher -> Ring buffer ---> firstHandler -                                 -> fourthHandler 
