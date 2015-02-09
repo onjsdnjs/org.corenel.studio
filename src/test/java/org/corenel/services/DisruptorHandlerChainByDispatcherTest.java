@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
@@ -62,7 +63,7 @@ public class DisruptorHandlerChainByDispatcherTest {
 		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -87,7 +88,7 @@ public class DisruptorHandlerChainByDispatcherTest {
 		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -122,7 +123,7 @@ public class DisruptorHandlerChainByDispatcherTest {
 		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -174,7 +175,7 @@ public class DisruptorHandlerChainByDispatcherTest {
 		pipeline.setServiceList(new ServiceHelper[]{batchServiceHelper,ftpServiceHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody("direct:service:dispatcher", pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		

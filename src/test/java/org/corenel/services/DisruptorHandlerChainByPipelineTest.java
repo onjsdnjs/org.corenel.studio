@@ -66,7 +66,7 @@ public class DisruptorHandlerChainByPipelineTest {
 		pipeline.attachServiceHelperChain(ftpServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody(ServiceType.ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -92,7 +92,7 @@ public class DisruptorHandlerChainByPipelineTest {
 		pipeline.attachServiceHelperChain(ftpServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody(ServiceType.ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -134,7 +134,7 @@ public class DisruptorHandlerChainByPipelineTest {
 		pipeline.attachServiceHelperChain(ftpServiceHelper);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline result = producer.requestBody(ServiceType.ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
+		Pipeline result = producer.requestBody(ServiceExecutorType.Pipeline.toString(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
