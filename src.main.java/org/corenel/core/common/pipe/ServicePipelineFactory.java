@@ -2,6 +2,7 @@ package org.corenel.core.common.pipe;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.helper.ServiceHelper;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author Á¤¼ö¿ø
  */
+@SuppressWarnings("rawtypes")
 @Component("servicePipelineFactory")
 public class ServicePipelineFactory{
 	
@@ -17,27 +19,27 @@ public class ServicePipelineFactory{
 		return new ServicePipeline();
 	}
 	
-	static class ServicePipeline implements Pipeline {
+	static class ServicePipeline<T> implements Pipeline<T> {
 		
 		private Response response;
 		private ServiceDispatcherType serviceDispatcherType = ServiceDispatcherType.requestService;
 		
-		static Queue<ServiceHelper> serviceQueue = new LinkedBlockingQueue<ServiceHelper>();
+		Queue<T> serviceQueue = new LinkedBlockingQueue<T>();
 
 		static ServiceHelper[] serviceList ;
 		
 		@Override
-		public void attachServiceHelperChain(ServiceHelper serviceHelper) {
-			serviceQueue.offer(serviceHelper);
+		public void attachServiceHelperChain(T t) {
+			serviceQueue.offer(t);
 		}
 		
 		@Override
-		public ServiceHelper detachServiceHelperChain() {
+		public T detachServiceHelperChain() {
 			return serviceQueue.poll();
 		}
 		
 		@Override
-		public Queue<ServiceHelper> getServiceQueue() {
+		public Queue<T> getServiceQueue() {
 			return serviceQueue;
 		}
 

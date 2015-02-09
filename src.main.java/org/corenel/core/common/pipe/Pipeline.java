@@ -5,17 +5,19 @@ import java.util.Queue;
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.helper.ServiceHelper;
+import org.corenel.core.common.helper.ServiceHelperHolder;
+import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
 
 /**
  * @author Á¤¼ö¿ø
  */
-public interface Pipeline {
+public interface Pipeline<T> {
 
-	void attachServiceHelperChain(ServiceHelper serviceHelper);
+	void attachServiceHelperChain(T t);
 	
-	ServiceHelper detachServiceHelperChain();
+	T detachServiceHelperChain();
 	
-	Queue<ServiceHelper> getServiceQueue();
+	Queue<T> getServiceQueue();
 	
 	void setServiceList(ServiceHelper[] serviceList) ;
 

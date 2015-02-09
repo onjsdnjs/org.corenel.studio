@@ -1,5 +1,6 @@
 package org.corenel.core.camel.handler;
 
+import java.util.List;
 import java.util.Queue;
 
 import org.apache.camel.Exchange;
@@ -10,8 +11,11 @@ import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.common.domain.ServiceType;
 import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.helper.ServiceHelper;
+import org.corenel.core.common.helper.ServiceHelperHolder;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
+import org.corenel.core.disruptor.executor.DefaultDisruptorExecutor;
+import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
 import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 		serviceContext = context;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
@@ -34,7 +39,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 		
 		serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
 		disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
-		disruptorHelper.getDisruptorExecutor().start();
+		DefaultDisruptorExecutor<ServiceHelperHolder<ServiceHelper>> disruptorExecutor = disruptorHelper.getDisruptorExecutor();
 
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		Validate.notNull(pipeline);
@@ -45,18 +50,22 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 			case requestService:
 				ServiceHelper[] serviceHelpers = pipeline.getServiceList();
 				serviceContext.putBean(ApplicationConstants.REQUEST_SERVICE, serviceHelpers);
+				
+				disruptorExecutor.start();
 				disruptorHelper.handleService();
-				disruptorHelper.getDisruptorExecutor().awaitAndShutdown(10000);
+				disruptorExecutor.awaitAndShutdown(10000);
 				logger.info("Disruptor has shutDown().");
 				break;
 
 			//calling service in background
 			case daemonService :
-				ServiceHelper serviceHelper = pipeline.detachServiceHelperChain();
-				serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
+				List<Object> service = (List<Object>)pipeline.detachServiceHelperChain();
+				ServiceHelper serviceHelper = (ServiceHelper)service.get(0);
 				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
 
-				disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
+				EventHandlerChain[] eventHandlerChain = (EventHandlerChain[])service.get(1);
+				disruptorExecutor.setEventHandlerChain(eventHandlerChain);
+				disruptorExecutor.start();
 				disruptorHelper.handleService();
 				
 				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
