@@ -63,8 +63,10 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 				ServiceHelper serviceHelper = (ServiceHelper)service.get(0);
 				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
 
-				EventHandlerChain[] eventHandlerChain = (EventHandlerChain[])service.get(1);
-				disruptorExecutor.setEventHandlerChain(eventHandlerChain);
+				if(service.size() > 1 && service.get(1) != null){
+					EventHandlerChain[] eventHandlerChain = (EventHandlerChain[])service.get(1);
+					disruptorExecutor.setEventHandlerChain(eventHandlerChain);
+				}
 				disruptorExecutor.start();
 				disruptorHelper.handleService();
 				
