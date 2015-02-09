@@ -92,11 +92,29 @@ public class HandlerChainDaemonServiceTest {
 	}
 	
 	/** 
+	 * 이벤트 핸들러의 실행 순서가 다음과 같이 진행됩니다.
+	 * 각 서비스는 해당 이벤트 핸들러를 설정한 값에 의해 수행하게 되고 firstHandler 와 fourthHandler 는 단일 스레드로 secondHandler1, secondHandler2 및
+	 * thirdHandler1, thirdHandler2 는 두개의 스레드로 동시에 수행하게 됩니다.  
+	 * 
+	 * 
+	 ********************** batchService 의 수행 순서는 다음과 같습니다. **************************************
+	 *
 	 *                                              secondHandler1 -> thirdHandler1
 	 *                                             /                               \
 	 * Publisher -> Ring buffer ---> firstHandler -                                 -> fourthHandler 
 	 *                                             \                               /
 	 *                                              secondHandler2 -> thirdHandler2
+	 *                                              
+	 *                     
+	 *                                               
+	 *                                               
+	 ********************** ftpService 의 수행순서는 다음과 같습니다. ******************************************
+	 *
+	 *                                              secondHandler1 
+	 *                                             /                              
+	 * Publisher -> Ring buffer ---> firstHandler -                                
+	 *                                             \                             
+	 *                                              secondHandler2
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
@@ -114,14 +132,17 @@ public class HandlerChainDaemonServiceTest {
 		eventHandlerChain1.setCurrentEventHandlers(new EventHandler[]{ firstHandler}); // current
 		eventHandlerChain1.setNextEventHandlers(new EventHandler[]{ secondHandler1,secondHandler2 });// next
 
+		// After 로 설정할 경우 반드시 이전에 참조되는 Currrent 핸들러가 지정되어 있어야 한다.
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain2 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
 		eventHandlerChain2.setAfterEventHandlers(new EventHandler[]{ secondHandler1});// skip
 		eventHandlerChain2.setNextEventHandlers(new EventHandler[]{ thirdHandler1}); // next
 
+		// After 로 설정할 경우 반드시 이전에 참조되는 Currrent 핸들러가 지정되어 있어야 한다.
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain3 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
 		eventHandlerChain3.setAfterEventHandlers(new EventHandler[]{secondHandler2});// skip
 		eventHandlerChain3.setNextEventHandlers(new EventHandler[]{ thirdHandler2}); // next
 
+		// After 로 설정할 경우 반드시 이전에 참조되는 Currrent 핸들러가 지정되어 있어야 한다.
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain4 = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
 		eventHandlerChain4.setAfterEventHandlers(new EventHandler[]{thirdHandler1, thirdHandler2});// current
 		eventHandlerChain4.setNextEventHandlers(new EventHandler[]{fourthHandler}); // skip
@@ -129,12 +150,15 @@ public class HandlerChainDaemonServiceTest {
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
+		
 		List<Object> batchService = new ArrayList<Object>();
 		batchService.add(batchServiceHelper);
+		// 수행하게 될 이벤트 핸들러를 설정한다, 단 설정하지 않을 시에는 단일스레드의 디폴트 핸들러가 수행하게 된다.
 		batchService.add(new EventHandlerChain[]{eventHandlerChain1, eventHandlerChain2,eventHandlerChain3,eventHandlerChain4});
 		
 		List<Object> ftpService = new ArrayList<Object>();
 		ftpService.add(ftpServiceHelper);
+		// 수행하게 될 이벤트 핸들러를 설정한다, 단 설정하지 않을 시에는 단일스레드의 디폴트 핸들러가 수행하게 된다.
 		ftpService.add(new EventHandlerChain[]{eventHandlerChain1});
 		
 		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();

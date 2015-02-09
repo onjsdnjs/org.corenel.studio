@@ -57,6 +57,10 @@ public class HandlerChainRequestServiceTest {
 	}
 	
 	/** 
+	 * 이벤트 핸들러의 실행 순서가 다음과 같이 진행됩니다.
+	 * 각 서비스는 모든 핸들러를 수행하게 되고 firstHandler 와 fourthHandler 는 단일 스레드로 secondHandler1, secondHandler2 및
+	 * thirdHandler1, thirdHandler2 는 두개의 스레드로 동시에 수행하게 됩니다.  
+	 * 
 	 *                                              secondHandler1 -> thirdHandler1
 	 *                                             /                               \
 	 * Publisher -> Ring buffer ---> firstHandler -                                 -> fourthHandler 
