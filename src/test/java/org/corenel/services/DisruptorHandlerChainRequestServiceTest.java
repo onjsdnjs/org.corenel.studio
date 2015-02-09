@@ -35,7 +35,8 @@ import com.lmax.disruptor.EventHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class) 
 @ContextConfiguration(locations={"classpath*:config/spring/context-*.xml"})
-public class DisruptorHandlerChainRouteProcessTest {
+
+public class DisruptorHandlerChainRequestServiceTest {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -140,7 +141,7 @@ public class DisruptorHandlerChainRouteProcessTest {
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void dispatcherHandlerComplexChainByPipelineTest() throws Exception {
+	public void dispatcherHandlerComplexChainByRequestServiceTest() throws Exception {
 		
 		FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>> firstHandler = new FirstDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>> secondHandler1 = new SecondDispatcherHandler1<ServiceHelperHolder<ServiceHelper>>();
