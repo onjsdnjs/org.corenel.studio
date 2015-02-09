@@ -1,10 +1,10 @@
 package org.corenel.core.common.pipe;
 
+
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-
 import org.corenel.core.common.domain.Response;
-import org.corenel.core.common.domain.ServiceExecutorType;
+import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ public class ServicePipelineFactory{
 	static class ServicePipeline implements Pipeline {
 		
 		private Response response;
-		private ServiceExecutorType serviceExecutorType = ServiceExecutorType.INDEPENDENT;
+		private ServiceDispatcherType serviceDispatcherType = ServiceDispatcherType.RouteProcess;
 		
 		static Queue<ServiceHelper> serviceQueue = new LinkedBlockingQueue<ServiceHelper>();
 
@@ -61,13 +61,12 @@ public class ServicePipelineFactory{
 			return response;
 		}
 
-		public ServiceExecutorType getServiceExecutorType() {
-			return serviceExecutorType;
+		public ServiceDispatcherType getServiceDispatcherType() {
+			return serviceDispatcherType;
 		}
 
-		public void setServiceExecutorType(ServiceExecutorType serviceExecutorType) {
-			this.serviceExecutorType = serviceExecutorType;
+		public void setServiceDispatcherType(ServiceDispatcherType serviceDispatcherType) {
+			this.serviceDispatcherType = serviceDispatcherType;
 		}
-
 	}
 }

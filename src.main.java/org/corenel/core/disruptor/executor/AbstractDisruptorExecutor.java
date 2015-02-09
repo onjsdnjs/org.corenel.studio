@@ -171,11 +171,9 @@ public abstract class AbstractDisruptorExecutor<T> extends AbstractDisruptorLife
 				
 			}
 			
-			if(eventHandlerGroup != null){
-				if(! ArrayUtils.isEmpty(eventHandlerChain.getAfterEventHandlers())){
-					eventHandlerGroup = getDisruptor().after(eventHandlerChain.getAfterEventHandlers());
-					
-				}
+			if(! ArrayUtils.isEmpty(eventHandlerChain.getAfterEventHandlers())){
+				eventHandlerGroup = getDisruptor().after(eventHandlerChain.getAfterEventHandlers());
+				
 			}
 			
 			if(eventHandlerGroup != null){

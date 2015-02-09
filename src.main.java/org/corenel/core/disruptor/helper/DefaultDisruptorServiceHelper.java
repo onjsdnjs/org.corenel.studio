@@ -2,7 +2,7 @@ package org.corenel.core.disruptor.helper;
 
 import org.apache.camel.Exchange;
 import org.corenel.core.common.ApplicationConstants;
-import org.corenel.core.common.domain.ServiceExecutorType;
+import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.helper.ServiceHelperHolder;
 import org.corenel.core.common.pipe.Pipeline;
@@ -31,14 +31,14 @@ public class DefaultDisruptorServiceHelper extends AbstractDisruptorServiceHelpe
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		EventPublisher<ServiceHelperHolder<ServiceHelper>> publisher = new DefaultEventPublisherOneArg<ServiceHelperHolder<ServiceHelper>,ServiceHelper>(getDisruptorExecutor());
 
-		if(pipeline.getServiceExecutorType() == ServiceExecutorType.INTERWORKING){
-			ServiceHelper[] serviceHelpers = getServiceContext().getBean(ApplicationConstants.INTERWORKING_CLASS_TYPE, ServiceHelper[].class);
+		if(pipeline.getServiceDispatcherType() == ServiceDispatcherType.EventPublish){
+			ServiceHelper[] serviceHelpers = getServiceContext().getBean(ApplicationConstants.EVENT_PUBLISH, ServiceHelper[].class);
 			for (ServiceHelper serviceHelper : serviceHelpers) {
 				publisher.publish(serviceHelper);
 			}
 		
 		}else{
-			ServiceHelper serviceHelper = getServiceContext().getBean(ApplicationConstants.SERVICE_CLASS_TYPE, ServiceHelper.class);
+			ServiceHelper serviceHelper = getServiceContext().getBean(ApplicationConstants.ROUTE_PROCESS, ServiceHelper.class);
 			publisher.publish(serviceHelper);
 		}
 		

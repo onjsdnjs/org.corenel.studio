@@ -3,7 +3,7 @@ package org.corenel.core.common.pipe;
 import java.util.Queue;
 
 import org.corenel.core.common.domain.Response;
-import org.corenel.core.common.domain.ServiceExecutorType;
+import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.helper.ServiceHelper;
 
 /**
@@ -25,7 +25,7 @@ public interface Pipeline {
 
 	Response getResult();
 
-	ServiceExecutorType getServiceExecutorType();
+	ServiceDispatcherType getServiceDispatcherType();
 
-	void setServiceExecutorType(ServiceExecutorType type);
+	void setServiceDispatcherType(ServiceDispatcherType type);
 }

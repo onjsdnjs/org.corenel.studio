@@ -4,6 +4,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.commons.lang.Validate;
 import org.corenel.core.common.ApplicationConstants;
+import org.corenel.core.common.domain.ServiceType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
@@ -34,22 +35,22 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 		Validate.notNull(pipeline);
 		ServiceHelper[] serviceHelpers = pipeline.getServiceList();
 		
-		switch(pipeline.getServiceExecutorType()){
+		switch(pipeline.getServiceDispatcherType()){
 			
 			/**
-			 * service to service by calling disruptor event publish
+			 * calling service by publishing disruptor event
 			 * */
-			case INTERWORKING:
-				serviceContext.putBean(ApplicationConstants.INTERWORKING_CLASS_TYPE, serviceHelpers);
+			case EventPublish:
+				serviceContext.putBean(ApplicationConstants.EVENT_PUBLISH, serviceHelpers);
 				disruptorHelper.handleService();
 				break;
 
 			/**
-			 * service to service by camel processor
+			 * calling service by camel process
 			 * */
-			case INDEPENDENT :
+			case RouteProcess :
 				for (ServiceHelper serviceHelper : serviceHelpers) {
-					serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, serviceHelper);
+					serviceContext.putBean(ApplicationConstants.ROUTE_PROCESS, serviceHelper);
 					disruptorHelper.handleService();
 				}
 		}

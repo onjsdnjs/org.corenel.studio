@@ -36,8 +36,8 @@ public class ApplicationConstants implements Serializable{
 	public static final String REQUEST = "request";
 	public static final String SERVICE_CLASSES = "serviceClasses";
 	public static final String SERVICE_DISPATCHER= "serviceDispatcher";
-	public static final String INTERWORKING_CLASS_TYPE = "interWorkingClassType";
-	public static final String SERVICE_CLASS_TYPE = "serviceClassType";
+	public static final String EVENT_PUBLISH = "eventPublish";
+	public static final String ROUTE_PROCESS = "serviceClassType";
 	public static final String EXCHANGE = "exchange";
 	public static final String SERVICE_FACTORY = "serviceFactory";
 	public static final String MODEL_MAP = "modelMap";

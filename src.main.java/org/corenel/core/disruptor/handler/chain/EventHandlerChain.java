@@ -44,9 +44,9 @@ public class EventHandlerChain<T> implements HandlerChain<T> {
 			printEventHandlers(str, getCurrentEventHandlers());
 		}
 
-		/*if(! ArrayUtils.isEmpty(getAfterEventHandlers())){
+		if(! ArrayUtils.isEmpty(getAfterEventHandlers())){
 			printEventHandlers(str, getAfterEventHandlers());
-		}*/
+		}
 		
 		if(! ArrayUtils.isEmpty(getNextEventHandlers())){
 			str.append(" -> ");	

@@ -34,7 +34,7 @@ public class ServicePipelineHandlerResolver implements Processor{
 		Validate.notNull(pipeline);
 		ServiceHelper serviceHelper = pipeline.detachServiceHelperChain();
 		serviceContext.putBean(ApplicationConstants.EXCHANGE, exchange);
-		serviceContext.putBean(ApplicationConstants.SERVICE_CLASS_TYPE, serviceHelper);
+		serviceContext.putBean(ApplicationConstants.ROUTE_PROCESS, serviceHelper);
 
 		disruptorHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
 		disruptorHelper.getDisruptorExecutor().start();
