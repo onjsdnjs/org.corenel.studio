@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.ApplicationConstants;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.factory.ServiceHelperFactory;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
@@ -44,7 +45,7 @@ public class ExcelServiceTest {
 	public void excelUploadTest() throws CloneNotSupportedException{
 		
 		ProductVO productVO = new ProductVO();
-		
+		productVO.setMid("testcorp");
 		String[] fieldNames = {"mid", "productid", "productkind", "productnm", "amount", "useflag", "enteruser"};
 		String[] fieldValues = {productVO.getMid()};
     	
@@ -59,7 +60,7 @@ public class ExcelServiceTest {
 		pipeline.setServiceList(new ServiceHelper[]{excelServiceHelper});
     	
     	ProducerTemplate producer = camelContext.createProducerTemplate();
-    	producer.requestBody("direct:service:pipeline", pipeline);
+    	producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline);
 		
 	}
 	
