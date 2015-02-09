@@ -72,13 +72,16 @@ public class HandlerChainDaemonServiceTest {
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
-		Pipeline<List<Object>>  pipeline = ServicePipelineFactory.newPipeline();
 		List<Object> batchService = new ArrayList<Object>();
 		batchService.add(batchServiceHelper);
 		batchService.add(new EventHandlerChain[]{eventHandlerChain});
 		
 		List<Object> ftpService = new ArrayList<Object>();
 		ftpService.add(ftpServiceHelper);
+		
+		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.attachServiceHelperChain(batchService);
+		pipeline.attachServiceHelperChain(ftpService);
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
