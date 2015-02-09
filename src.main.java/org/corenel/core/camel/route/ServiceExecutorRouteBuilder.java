@@ -1,14 +1,12 @@
 package org.corenel.core.camel.route;
 
 import javax.annotation.Resource;
-
 import org.apache.camel.AsyncCallback;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.processor.StopProcessor;
 import org.corenel.core.camel.handler.ServiceDispatcherHandlerResolver;
-import org.corenel.core.camel.handler.ServicePipelineHandlerResolver;
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.domain.ServiceResponse;
 import org.corenel.core.common.pipe.Pipeline;
@@ -48,11 +46,6 @@ public final class ServiceExecutorRouteBuilder extends RouteBuilder {
 				return true;
 			}
 		})
-		.end();
-		
-		from("direct:service:pipeline")
-		.setExchangePattern(ExchangePattern.InOut)
-		.process(new ServicePipelineHandlerResolver(serviceContext))
 		.end();
 
 		from("direct:service:dispatcher")

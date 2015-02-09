@@ -4,25 +4,18 @@ public class ServiceType{
 
 	public enum ServiceDispatcherType {
 	
-		EventPublish, RouteProcess;
+		disruptorEventPublisher, routeProcessor, routeProcessorRecursive;
 		
 	}
 
 	public enum ServiceExecutorType {
 		
-		Pipeline {
-		    @Override
-		    public String toString() {
-		      return "direct:service:pipeline";
-		    }
-		  },
-		  
 		Dispatcher {
 			  @Override
 			  public String toString() {
 				  return "direct:service:dispatcher";
 			  }
-		  },
+		  }
 		
 	}
 }

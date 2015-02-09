@@ -31,7 +31,7 @@ public class DefaultDisruptorServiceHelper extends AbstractDisruptorServiceHelpe
 		Pipeline pipeline = (Pipeline)exchange.getIn().getBody();
 		EventPublisher<ServiceHelperHolder<ServiceHelper>> publisher = new DefaultEventPublisherOneArg<ServiceHelperHolder<ServiceHelper>,ServiceHelper>(getDisruptorExecutor());
 
-		if(pipeline.getServiceDispatcherType() == ServiceDispatcherType.EventPublish){
+		if(pipeline.getServiceDispatcherType() == ServiceDispatcherType.disruptorEventPublisher){
 			ServiceHelper[] serviceHelpers = getServiceContext().getBean(ApplicationConstants.EVENT_PUBLISH, ServiceHelper[].class);
 			for (ServiceHelper serviceHelper : serviceHelpers) {
 				publisher.publish(serviceHelper);

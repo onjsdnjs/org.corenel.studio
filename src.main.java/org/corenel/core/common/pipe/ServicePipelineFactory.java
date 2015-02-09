@@ -21,7 +21,7 @@ public class ServicePipelineFactory{
 	static class ServicePipeline implements Pipeline {
 		
 		private Response response;
-		private ServiceDispatcherType serviceDispatcherType = ServiceDispatcherType.RouteProcess;
+		private ServiceDispatcherType serviceDispatcherType = ServiceDispatcherType.routeProcessor;
 		
 		static Queue<ServiceHelper> serviceQueue = new LinkedBlockingQueue<ServiceHelper>();
 
