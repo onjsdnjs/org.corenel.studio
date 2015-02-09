@@ -1,10 +1,7 @@
 package org.corenel.services;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Resource;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
@@ -16,7 +13,6 @@ import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.common.pipe.ServicePipelineFactory;
 import org.corenel.core.context.Context;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
-import org.corenel.core.disruptor.helper.DefaultDisruptorServiceHelper;
 import org.corenel.services.batch.helper.DefaultBatchServiceHelper;
 import org.corenel.services.disruptor.handler.chain.FirstDispatcherHandler;
 import org.corenel.services.disruptor.handler.chain.FourthDispatcherHandler;
