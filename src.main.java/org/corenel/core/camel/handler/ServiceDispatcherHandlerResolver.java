@@ -8,6 +8,7 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.commons.lang.Validate;
 import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.common.domain.ServiceType;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
@@ -63,7 +64,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
 				if(!serviceQueue.isEmpty()){
 					ProducerTemplate producer = exchange.getContext().createProducerTemplate();
-					producer.requestBody("direct:service:pipeline", pipeline);
+					producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline);
 				}
 		}
 	}
