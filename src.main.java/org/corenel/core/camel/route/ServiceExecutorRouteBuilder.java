@@ -10,6 +10,7 @@ import org.apache.camel.processor.StopProcessor;
 import org.corenel.core.camel.handler.ServiceDispatcherHandlerResolver;
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.domain.ServiceResponse;
+import org.corenel.core.common.domain.ServiceType.ServiceExecutorType;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.context.Context;
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public final class ServiceExecutorRouteBuilder extends RouteBuilder {
 		})
 		.end();
 
-		from("direct:service:dispatcher")
+		from(ServiceExecutorType.Dispatcher.toString())
 		.setExchangePattern(ExchangePattern.InOut)
 		.process(new ServiceDispatcherHandlerResolver(serviceContext))
 		.choice()
