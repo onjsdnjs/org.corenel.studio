@@ -85,7 +85,7 @@ public class HandlerChainDaemonServiceTest {
 	
 	/** 
 	 * 이벤트 핸들러의 실행 순서가 다음과 같이 진행됩니다.
-	 * 각 서비스는 해당 이벤트 핸들러를 설정한 값에 의해 수행하게 되고 firstHandler 와 fourthHandler 는 단일 스레드로 secondHandler1, secondHandler2 및
+	 * 각 서비스는 해당 이벤트 핸들러를 설정한 정책에 의해 수행하게 되고 firstHandler 와 fourthHandler 는 단일 스레드로 secondHandler1, secondHandler2 및
 	 * thirdHandler1, thirdHandler2 는 두개의 스레드로 동시에 수행하게 됩니다.  
 	 * 
 	 * 
