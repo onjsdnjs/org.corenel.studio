@@ -1,7 +1,6 @@
 package org.corenel.core.common.pipe;
 
 import java.util.Queue;
-
 import org.corenel.core.common.domain.Response;
 import org.corenel.core.common.domain.ServiceType.ServiceDispatcherType;
 import org.corenel.core.common.helper.ServiceHelper;

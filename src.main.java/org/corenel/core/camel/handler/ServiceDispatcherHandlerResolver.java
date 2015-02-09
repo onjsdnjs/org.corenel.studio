@@ -1,8 +1,6 @@
 package org.corenel.core.camel.handler;
 
-import java.util.List;
 import java.util.Queue;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
@@ -47,6 +45,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 			
 			//calling service by client request : default
 			case requestService:
+				
 				ServiceHelper[] serviceHelpers = pipeline.getServiceList();
 				serviceContext.putBean(ApplicationConstants.REQUEST_SERVICE, serviceHelpers);
 				
@@ -58,14 +57,15 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 
 			//calling service in background
 			case daemonService :
-				List<Object> service = (List<Object>)pipeline.detachServiceChain();
-				ServiceHelper serviceHelper = (ServiceHelper)service.get(0);
-				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
 
-				if(service.size() > 1 && service.get(1) != null){
-					EventHandlerChain[] eventHandlerChain = (EventHandlerChain[])service.get(1);
+				ServiceHelper serviceHelper = (ServiceHelper)pipeline.detachServiceChain();
+				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
+				EventHandlerChain[] eventHandlerChain = serviceHelper.getEventHandlerChain();
+				
+				if(eventHandlerChain != null){
 					disruptorExecutor.setEventHandlerChain(eventHandlerChain);
 				}
+				
 				disruptorExecutor.start();
 				disruptorHelper.handleService();
 				disruptorExecutor.setEventHandlerChain(null);
