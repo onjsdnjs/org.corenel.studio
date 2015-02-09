@@ -1,11 +1,14 @@
 package org.corenel.services;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.common.factory.ServiceHelperFactory;
+import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.common.pipe.ServicePipelineFactory;
 import org.corenel.core.context.Context;
@@ -36,6 +39,7 @@ public class ExcelServiceTest {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void excelUploadTest() throws CloneNotSupportedException{
 		
@@ -51,8 +55,8 @@ public class ExcelServiceTest {
     	excelServiceHelper.setFieldNames(fieldNames);
     	excelServiceHelper.setFieldValues(fieldValues);
     	
-    	Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(excelServiceHelper);
+    	Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.setServiceList(new ServiceHelper[]{excelServiceHelper});
     	
     	ProducerTemplate producer = camelContext.createProducerTemplate();
     	producer.requestBody("direct:service:pipeline", pipeline);

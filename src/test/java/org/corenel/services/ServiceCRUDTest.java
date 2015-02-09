@@ -1,10 +1,13 @@
 package org.corenel.services;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.corenel.core.common.factory.ServiceHelperFactory;
+import org.corenel.core.common.helper.ServiceHelper;
 import org.corenel.core.common.pipe.Pipeline;
 import org.corenel.core.common.pipe.ServicePipelineFactory;
 import org.corenel.core.context.Context;
@@ -35,14 +38,15 @@ public class ServiceCRUDTest {
 	public void contextSetting(){
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void createServiceHelperTest() throws Exception{
 		
 		serviceHelperFactory.createServiceHelper(TestServiceHelper.class);
 		TestServiceHelper testHelper = serviceContext.getServiceHelperBean(TestServiceHelper.class.getName(), TestServiceHelper.class);
 		
-		Pipeline pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceHelperChain(testHelper);
+		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.setServiceList(new ServiceHelper[]{testHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
 		producer.requestBody("direct:service:pipeline", pipeline);
