@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Á¤¼ö¿ø
  */
-@SuppressWarnings({"serial"})
+@SuppressWarnings({"serial","rawtypes"})
 public class DefaultDisruptorServiceHelper extends AbstractDisruptorServiceHelper{
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
