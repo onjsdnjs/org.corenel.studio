@@ -29,12 +29,12 @@ public class ServicePipelineFactory{
 		static ServiceHelper[] serviceList ;
 		
 		@Override
-		public void attachServiceHelperChain(T t) {
+		public void attachServiceChain(T t) {
 			serviceQueue.offer(t);
 		}
 		
 		@Override
-		public T detachServiceHelperChain() {
+		public T detachServiceChain() {
 			return serviceQueue.poll();
 		}
 		

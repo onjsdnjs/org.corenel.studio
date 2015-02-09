@@ -11,9 +11,9 @@ import org.corenel.core.common.helper.ServiceHelper;
  */
 public interface Pipeline<T> {
 
-	void attachServiceHelperChain(T t);
+	void attachServiceChain(T t);
 	
-	T detachServiceHelperChain();
+	T detachServiceChain();
 	
 	Queue<T> getServiceQueue();
 	

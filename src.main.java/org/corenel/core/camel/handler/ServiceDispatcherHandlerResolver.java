@@ -58,7 +58,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 
 			//calling service in background
 			case daemonService :
-				List<Object> service = (List<Object>)pipeline.detachServiceHelperChain();
+				List<Object> service = (List<Object>)pipeline.detachServiceChain();
 				ServiceHelper serviceHelper = (ServiceHelper)service.get(0);
 				serviceContext.putBean(ApplicationConstants.DAEMON_SERVICE, serviceHelper);
 
