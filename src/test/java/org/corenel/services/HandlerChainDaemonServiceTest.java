@@ -66,22 +66,14 @@ public class HandlerChainDaemonServiceTest {
 		EventHandlerChain<ServiceHelperHolder<ServiceHelper>> eventHandlerChain = new EventHandlerChain<ServiceHelperHolder<ServiceHelper>>();
 		eventHandlerChain.setCurrentEventHandlers(new EventHandler[]{ singleHandler }); // current
 
-		DefaultDisruptorServiceHelper disruptorServiceHelper = serviceContext.getBean(DefaultDisruptorServiceHelper.class.getName(), DefaultDisruptorServiceHelper.class);
-		disruptorServiceHelper.getDisruptorExecutor().setEventHandlerChain(new EventHandlerChain[]{eventHandlerChain});
-
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		batchServiceHelper.addEventHandlerChain(new EventHandlerChain[]{eventHandlerChain});
+		
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
 		
-		List<Object> batchService = new ArrayList<Object>();
-		batchService.add(batchServiceHelper);
-		batchService.add(new EventHandlerChain[]{eventHandlerChain});
-		
-		List<Object> ftpService = new ArrayList<Object>();
-		ftpService.add(ftpServiceHelper);
-		
-		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceChain(batchService);
-		pipeline.attachServiceChain(ftpService);
+		Pipeline<ServiceHelper> pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.attachServiceChain(batchServiceHelper);
+		pipeline.attachServiceChain(ftpServiceHelper);
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
@@ -148,22 +140,16 @@ public class HandlerChainDaemonServiceTest {
 		eventHandlerChain4.setNextEventHandlers(new EventHandler[]{fourthHandler}); // skip
 		
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
+		// 수행하게 될 이벤트 핸들러를 설정한다, 단 설정하지 않을 시에는 단일스레드의 디폴트 핸들러가 수행하게 된다.
+		batchServiceHelper.addEventHandlerChain(new EventHandlerChain[]{eventHandlerChain1, eventHandlerChain2,eventHandlerChain3,eventHandlerChain4});
+		
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
-		
-		
-		List<Object> batchService = new ArrayList<Object>();
-		batchService.add(batchServiceHelper);
 		// 수행하게 될 이벤트 핸들러를 설정한다, 단 설정하지 않을 시에는 단일스레드의 디폴트 핸들러가 수행하게 된다.
-		batchService.add(new EventHandlerChain[]{eventHandlerChain1, eventHandlerChain2,eventHandlerChain3,eventHandlerChain4});
+		ftpServiceHelper.addEventHandlerChain(new EventHandlerChain[]{eventHandlerChain1});
 		
-		List<Object> ftpService = new ArrayList<Object>();
-		ftpService.add(ftpServiceHelper);
-		// 수행하게 될 이벤트 핸들러를 설정한다, 단 설정하지 않을 시에는 단일스레드의 디폴트 핸들러가 수행하게 된다.
-		ftpService.add(new EventHandlerChain[]{eventHandlerChain1});
-		
-		Pipeline<List<Object>> pipeline = ServicePipelineFactory.newPipeline();
-		pipeline.attachServiceChain(batchService);
-		pipeline.attachServiceChain(ftpService);
+		Pipeline<ServiceHelper> pipeline = ServicePipelineFactory.newPipeline();
+		pipeline.attachServiceChain(batchServiceHelper);
+		pipeline.attachServiceChain(ftpServiceHelper);
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
