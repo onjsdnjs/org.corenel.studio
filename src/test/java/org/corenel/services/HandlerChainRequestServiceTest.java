@@ -79,7 +79,7 @@ public class HandlerChainRequestServiceTest {
 	 * thirdHandler1, thirdHandler2 는 두개의 스레드로 동시에 수행하게 됩니다.  
 	 * 
 	 * batchService 와 ftpService 모두 동일한 핸들러의 흐름을 수행하게 됩니다.
-	 * 만약 각 서비스마다 다른 핸들러의 흐름을 수행하고자 할 경우에는 HandlerChainDaemonServiceTest 를 참조하여 설정하면 됩니다.
+	 * 만약 각 서비스마다 다른 핸들러의 흐름을 수행하고자 할 경우에는 HandlerChainDaemonServiceTest 클래스를 참조하십시오.
 	 * 
 	 *                                              secondHandler1 -> thirdHandler1
 	 *                                             /                               \
