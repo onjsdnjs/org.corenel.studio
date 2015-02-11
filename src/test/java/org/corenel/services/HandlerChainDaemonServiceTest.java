@@ -55,7 +55,7 @@ public class HandlerChainDaemonServiceTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void dispatcherHandlerSingleChainByPipelineTest() throws Exception{
+	public void singleChainByDaemonServiceTest() throws Exception{
 		
 		SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>> singleHandler = new SingleDispatcherHandler<ServiceHelperHolder<ServiceHelper>>();
 		

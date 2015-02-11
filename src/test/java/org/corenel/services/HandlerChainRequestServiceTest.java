@@ -58,7 +58,7 @@ public class HandlerChainRequestServiceTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void defaultChainByRequestServiceTest() throws Exception{
+	public void singleChainByRequestServiceTest() throws Exception{
 
 		DefaultBatchServiceHelper batchServiceHelper = serviceContext.getServiceHelperBean(DefaultBatchServiceHelper.class.getName(), DefaultBatchServiceHelper.class);
 		DefaultFtpServiceHelper ftpServiceHelper = serviceContext.getServiceHelperBean(DefaultFtpServiceHelper.class.getName(), DefaultFtpServiceHelper.class);
