@@ -13,7 +13,7 @@ public class ServiceType{
 		Boot ("direct:service:boot") ,
 		Dispatcher("direct:service:dispatcher");
 		
-		private   String route;
+		private String route;
 
 		private ServiceExecutorType(){}
 		
