@@ -73,7 +73,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
 				if(!serviceQueue.isEmpty()){
 					ProducerTemplate producer = exchange.getContext().createProducerTemplate();
-					producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline);
+					producer.requestBody(ServiceExecutorType.Dispatcher.getRoute(), pipeline);
 				}
 		}
 	}

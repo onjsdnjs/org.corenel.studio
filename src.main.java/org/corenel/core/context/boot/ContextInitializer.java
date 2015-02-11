@@ -48,7 +48,7 @@ public class ContextInitializer implements Initializer, ApplicationContextAware,
 		}
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		producer.sendBody(ServiceExecutorType.Boot.toString(), serviceContext);
+		producer.sendBody(ServiceExecutorType.Boot.getRoute(), serviceContext);
 		
 		logger.info(">> serviceContextBoot(). ");
 	}

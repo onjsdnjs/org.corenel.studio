@@ -51,7 +51,7 @@ public final class ServiceExecutorRouteBuilder extends RouteBuilder {
 		})
 		.end();
 
-		from(ServiceExecutorType.Dispatcher.toString())
+		from(ServiceExecutorType.Dispatcher.getRoute())
 		.setExchangePattern(ExchangePattern.InOut)
 		.process(new ServiceDispatcherHandlerResolver(serviceContext))
 		.choice()

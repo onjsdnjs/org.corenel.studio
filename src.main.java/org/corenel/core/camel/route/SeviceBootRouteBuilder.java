@@ -25,7 +25,7 @@ public final class SeviceBootRouteBuilder extends RouteBuilder {
 		
 		logger.info(">> SeviceBootRouteBuilder configure().. ");	
 		
-		from(ServiceExecutorType.Boot.toString())
+		from(ServiceExecutorType.Boot.getRoute())
 			.setExchangePattern(ExchangePattern.InOut)
 			.process(new ServiceBootHandlerResolver(serviceHelperFactory))
 			.end();

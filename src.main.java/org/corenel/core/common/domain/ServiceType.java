@@ -10,19 +10,19 @@ public class ServiceType{
 
 	public enum ServiceExecutorType {
 		
-		Boot {
-			@Override
-			public String toString() {
-				return "direct:service:boot";
-			}
-		},
-
-		Dispatcher {
-			  @Override
-			  public String toString() {
-				  return "direct:service:dispatcher";
-			  }
-		  }
+		Boot ("direct:service:boot") ,
+		Dispatcher("direct:service:dispatcher");
 		
+		private   String route;
+
+		private ServiceExecutorType(){}
+		
+		private ServiceExecutorType(String route) {
+			this.route = route;
+		}
+
+		public String getRoute() {
+			return route;
+		}
 	}
 }
