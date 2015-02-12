@@ -22,7 +22,7 @@ public class DefaultServiceHelperFactory extends AbstractServiceHelperFactory {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Override
-	public void initializeServiceHelper(Context<String, Object> context) throws Exception{
+	public void initializeInstance(Context<String, Object> context) throws Exception{
 		
 		logger.info("DefaultServiceHelperFactory initializeServiceHelper()..");
 

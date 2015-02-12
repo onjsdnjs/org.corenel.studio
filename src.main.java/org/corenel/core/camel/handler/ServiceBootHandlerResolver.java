@@ -26,6 +26,8 @@ public class ServiceBootHandlerResolver implements Processor{
 		logger.info(">> ServiceBootHandlerResolver process()..");
 		
 		Context<String, Object> context = (ServiceContext<String, Object>)exchange.getIn().getBody();
-		serviceHelperFactory.initializeServiceHelper(context);
+		serviceHelperFactory.initializeInstance(context);
+
+		logger.info(">> serviceHelperFactory.initializeInstance has finished");
 	}
 }
