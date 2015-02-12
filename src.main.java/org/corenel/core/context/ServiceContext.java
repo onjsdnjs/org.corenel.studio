@@ -22,7 +22,7 @@ public class ServiceContext<K,V> implements Context<K,V>{
 	public void initializingBean(Map<K,V> map) {
 		
 		beanMap = new HashMap<String,Object>();
-		beanMap.put(ApplicationConstants.CONTEXT, this);
+		beanMap.put(ApplicationConstants.SERVICE_CONTEXT, this);
 		Set<K> keySet = map.keySet();
 		for (K key : keySet) {
 			Object object = map.get(key);

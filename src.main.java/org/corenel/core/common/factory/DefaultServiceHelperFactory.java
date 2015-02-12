@@ -24,46 +24,34 @@ public class DefaultServiceHelperFactory extends AbstractServiceHelperFactory {
 	
 	@Resource(name = "serviceContext")
     private Context<String, Object> serviceContext;
+	
+	Class<?>[] paramTypes = {Context.class};
+	String[] keys = {ApplicationConstants.SERVICE_CONTEXT};
+	Object[] args;
 
 	@Override
-	public void createServiceHelper(Context<String, Object> context) throws Exception{
+	public void initializeServiceHelper(Context<String, Object> context) throws Exception{
 		
-		logger.info("DefaultServiceHelperFactory createServiceHelper()..");
+		logger.info("DefaultServiceHelperFactory initializeServiceHelper()..");
 		
-		Class<?>[] paramTypes = {Context.class};
-		String[] keys = {ApplicationConstants.CONTEXT};
-		Object[] args =  context.getBeans(keys, paramTypes);
-		
+		args = serviceContext.getBeans(keys, paramTypes);
 		List<String> services = context.getBean(ApplicationConstants.SERVICE_CLASSES, List.class);
 		if(services != null && services.size() > 0){
 			for (int i = 0; i < services.size(); i++){
-				Class<?> clazz = Class.forName(services.get(i));
-				Constructor<?> service = clazz.getConstructor(paramTypes);
-				Object newInstance = service.newInstance(args);
-				context.putBean(newInstance.getClass().getName(), newInstance);
-				
-				logger.info("{} has created in serviceContext" , newInstance.getClass().getName());
-				
+				Class<? extends GenericServiceHelper> clazz = (Class<? extends GenericServiceHelper>) Class.forName(services.get(i));
+				createServiceHelper(clazz);
 			}
 		}
 
 		String dispatcher = context.getBean(ApplicationConstants.SERVICE_DISPATCHER, String.class);
 		if(dispatcher != null){
-			Class<?> clazz = Class.forName(dispatcher);
-			Constructor<?> serviceDisruptor = clazz.getConstructor(paramTypes);
-			Object newInstance = serviceDisruptor.newInstance(args);
-			context.putBean(newInstance.getClass().getName(), newInstance);
-			
-			logger.info("ServiceDispatcher has created({})", newInstance.getClass().getName());
+			Class<? extends GenericServiceHelper> clazz = (Class<? extends GenericServiceHelper>)Class.forName(dispatcher);
+			createServiceHelper(clazz);
 		}
 	}
 
 	@Override
 	public void createServiceHelper(Class<? extends GenericServiceHelper> clazz) throws Exception {
-		
-		Class<?>[] paramTypes = {Context.class};
-		String[] keys = {ApplicationConstants.CONTEXT};
-		Object[] args =  serviceContext.getBeans(keys, paramTypes);
 		
 		Constructor<?> service = clazz.getConstructor(paramTypes);
 		Object newInstance = service.newInstance(args);

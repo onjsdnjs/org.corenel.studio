@@ -7,7 +7,7 @@ import org.corenel.core.context.Context;
 
 public interface ServiceHelperFactory extends Serializable{
 
-	void createServiceHelper(Context<String, Object> context) throws Exception;
+	void initializeServiceHelper(Context<String, Object> context) throws Exception;
 	
 	void createServiceHelper(Class<? extends GenericServiceHelper> clazz) throws Exception;
 }

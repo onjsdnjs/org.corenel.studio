@@ -26,7 +26,7 @@ public class ApplicationConstants implements Serializable{
 	public static final String FILE_NAME = "fileName";
 	public static final String SAMPLE_NAME = "sampleName";
 	public static final String SQL_ID = "sqlId";
-	public static final String CONTEXT = "context";
+	public static final String SERVICE_CONTEXT = "serviceContext";
 	public static final String PROPERTIES_SERVICE = "propertiesService";
 	public static final String TRAN_SERVICE = "tranService";
 	public static final String MESSAGE_RESULT_VO = "resultVO";
