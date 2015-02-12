@@ -69,6 +69,7 @@ public class ServiceDispatcherHandlerResolver implements Processor{
 				disruptorExecutor.start();
 				disruptorHelper.handleService();
 				disruptorExecutor.setEventHandlerChain(null);
+//				disruptorExecutor.awaitAndShutdown(10000);
 				
 				Queue<ServiceHelper> serviceQueue = pipeline.getServiceQueue();
 				if(!serviceQueue.isEmpty()){

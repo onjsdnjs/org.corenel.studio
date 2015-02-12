@@ -3,11 +3,10 @@ package org.corenel.core.common.factory;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang.StringUtils;
 import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.common.helper.GenericServiceHelper;
 import org.corenel.core.context.Context;
@@ -30,15 +29,13 @@ public class DefaultServiceHelperFactory extends AbstractServiceHelperFactory {
 		setServiceContext(context);
 	
 		List<String> services = context.getBean(ApplicationConstants.SERVICE_CLASSES, List.class);
-		if(services != null && services.size() > 0){
-			for (int i = 0; i < services.size(); i++){
-				Class<? extends GenericServiceHelper> clazz = (Class<? extends GenericServiceHelper>) Class.forName(services.get(i));
-				createServiceHelper(clazz);
-			}
+		for (String service : services){
+			Class<? extends GenericServiceHelper> clazz = (Class<? extends GenericServiceHelper>) Class.forName(service);
+			createServiceHelper(clazz);
 		}
 
 		String dispatcher = context.getBean(ApplicationConstants.SERVICE_DISPATCHER, String.class);
-		if(dispatcher != null){
+		if(StringUtils.isNotEmpty(dispatcher)){
 			Class<? extends GenericServiceHelper> clazz = (Class<? extends GenericServiceHelper>)Class.forName(dispatcher);
 			createServiceHelper(clazz);
 		}
