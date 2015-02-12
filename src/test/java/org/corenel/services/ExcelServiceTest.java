@@ -60,7 +60,7 @@ public class ExcelServiceTest {
 		pipeline.setServiceList(new ServiceHelper[]{excelServiceHelper});
     	
     	ProducerTemplate producer = camelContext.createProducerTemplate();
-    	producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline);
+    	producer.requestBody(ServiceExecutorType.Dispatcher.getRoute(), pipeline);
 		
 	}
 	

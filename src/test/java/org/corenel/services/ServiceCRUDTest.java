@@ -50,7 +50,7 @@ public class ServiceCRUDTest {
 		pipeline.setServiceList(new ServiceHelper[]{testHelper});
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline);
+		producer.requestBody(ServiceExecutorType.Dispatcher.getRoute(), pipeline);
 	}
 	
 	@Test

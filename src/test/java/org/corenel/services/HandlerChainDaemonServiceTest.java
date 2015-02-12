@@ -73,7 +73,7 @@ public class HandlerChainDaemonServiceTest {
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline<List<Object>>  result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
+		Pipeline<List<Object>>  result = producer.requestBody(ServiceExecutorType.Dispatcher.getRoute(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
@@ -149,7 +149,7 @@ public class HandlerChainDaemonServiceTest {
 		pipeline.setServiceDispatcherType(ServiceDispatcherType.daemonService);
 		
 		ProducerTemplate producer = camelContext.createProducerTemplate();
-		Pipeline<List<Object>> result = producer.requestBody(ServiceExecutorType.Dispatcher.toString(), pipeline, Pipeline.class);
+		Pipeline<List<Object>> result = producer.requestBody(ServiceExecutorType.Dispatcher.getRoute(), pipeline, Pipeline.class);
 		
 		logger.info(result.getResult().getMessage().toString());
 		
