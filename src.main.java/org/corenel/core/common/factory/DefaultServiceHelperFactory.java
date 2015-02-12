@@ -22,19 +22,13 @@ public class DefaultServiceHelperFactory extends AbstractServiceHelperFactory {
 	
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
-	@Resource(name = "serviceContext")
-    private Context<String, Object> serviceContext;
-	
-	Class<?>[] paramTypes = {Context.class};
-	String[] keys = {ApplicationConstants.SERVICE_CONTEXT};
-	Object[] args;
-
 	@Override
 	public void initializeServiceHelper(Context<String, Object> context) throws Exception{
 		
 		logger.info("DefaultServiceHelperFactory initializeServiceHelper()..");
-		
-		args = serviceContext.getBeans(keys, paramTypes);
+
+		setServiceContext(context);
+	
 		List<String> services = context.getBean(ApplicationConstants.SERVICE_CLASSES, List.class);
 		if(services != null && services.size() > 0){
 			for (int i = 0; i < services.size(); i++){
@@ -53,9 +47,9 @@ public class DefaultServiceHelperFactory extends AbstractServiceHelperFactory {
 	@Override
 	public void createServiceHelper(Class<? extends GenericServiceHelper> clazz) throws Exception {
 		
-		Constructor<?> service = clazz.getConstructor(paramTypes);
-		Object newInstance = service.newInstance(args);
-		serviceContext.putBean(newInstance.getClass().getName(), newInstance);
+		Constructor<?> service = clazz.getConstructor(getParamTypes());
+		Object newInstance = service.newInstance(getArgs());
+		getServiceContext().putBean(newInstance.getClass().getName(), newInstance);
 		
 		logger.info("{} has created in serviceContext" , newInstance.getClass().getName());
 	}
