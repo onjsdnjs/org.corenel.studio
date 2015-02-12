@@ -39,6 +39,7 @@ public abstract class AbstractFtpServiceHelper extends GenericServiceHelper impl
 	public void handleService() throws Exception {
 		
 		logger.info(">> " + getClass().getSimpleName() + " handleService()");
+		Thread.sleep(3000);
 		
 //		try {
 			

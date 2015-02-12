@@ -32,6 +32,7 @@ public abstract class AbstractBatchServiceHelper extends GenericServiceHelper im
 	public void handleService() throws Exception {
 		
 		logger.info(">> " + getClass().getSimpleName() + " handleService()");
+		Thread.sleep(3000);
 		
 	}
 	
