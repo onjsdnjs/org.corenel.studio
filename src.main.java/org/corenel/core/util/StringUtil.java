@@ -2,14 +2,14 @@ package org.corenel.core.util;
 
 public class StringUtil {
 
-    public static String changeFirstCharacter(String str, boolean capitalize) {
+    public static String changeFirstCharacter(String str, boolean useCase) {
 
         if (str == null || str.length() == 0)
             return str;
 
         StringBuilder sb = new StringBuilder(str.length());
 
-        if (capitalize)
+        if (useCase)
             sb.append(Character.toUpperCase(str.charAt(0)));
         else
             sb.append(Character.toLowerCase(str.charAt(0)));
@@ -23,9 +23,7 @@ public class StringUtil {
 
         char[] nameChar = fieldName.toCharArray();
 
-        if (nameChar.length > 0
-                && Character.isLowerCase(nameChar[0])
-                && (nameChar.length == 1 || !Character.isUpperCase(nameChar[1]))) {
+        if (nameChar.length > 0 && Character.isLowerCase(nameChar[0]) && (nameChar.length == 1 || !Character.isUpperCase(nameChar[1]))) {
             fieldName = changeFirstCharacter(fieldName, true);
         }
         return fieldName;

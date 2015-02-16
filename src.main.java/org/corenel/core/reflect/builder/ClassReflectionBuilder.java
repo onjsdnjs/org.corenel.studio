@@ -6,23 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.corenel.core.reflect.FieldAlreadyExistException;
 import org.corenel.core.reflect.ReflectExecutor;
 import org.corenel.core.reflect.executor.ClassReflectExecutor;
-import org.corenel.core.reflect.executor.GetSetMaker;
+import org.corenel.core.reflect.executor.MethodMaker;
 import org.corenel.core.util.ClassUtil;
 import org.corenel.core.util.StringUtil;
 
 public class ClassReflectionBuilder implements ReflectionBuilder {
 
-	private static ReflectionBuilder reflectionBuilder;
-
-	private ClassReflectionBuilder() {
-	}
-
 	public ReflectExecutor buildReflectExecutor(Class<?> clazz) {
 		
-		Map<String, GetSetMaker> methods = new HashMap<String, GetSetMaker>();
+		Map<String, MethodMaker> methodRepository = new HashMap<String, MethodMaker>();
 		List<Field> fields = ClassUtil.getFields(clazz);
 
 		for (Field field : fields) {
@@ -32,52 +26,45 @@ public class ClassReflectionBuilder implements ReflectionBuilder {
 
 			try {
 
-				extractMethodAndFieldInfo(methods, methodName, field, fieldName);
+				settingsClassProperties(methodRepository, methodName, field, fieldName);
 
 			} catch (NoSuchMethodException e) {
 
 				methodName = StringUtil.changeFirstCharacter(field.getName(), true);
-
 				try {
-
-					extractMethodAndFieldInfo(methods, methodName, field, fieldName);
-
-				} catch (NoSuchMethodException e2) {
-
+					settingsClassProperties(methodRepository, methodName, field, fieldName);
+				} catch (NoSuchMethodException e1) {
 				}
 			}
 		}
 
-		return new ClassReflectExecutor(clazz, methods);
+		return new ClassReflectExecutor(clazz, methodRepository);
 	}
 
-	private void extractMethodAndFieldInfo(Map<String, GetSetMaker> methods, String methodName, Field field,
-			String fieldName) throws NoSuchMethodException {
+	private void settingsClassProperties(Map<String, MethodMaker> methodRepository, String methodName, Field field, String fieldName) throws NoSuchMethodException {
 
-		GetSetMaker getterAndSetter = methods.get(fieldName);
-		if (getterAndSetter != null)
-			throw new FieldAlreadyExistException(fieldName);
-
-		methods.put(fieldName, getSetSettings(field, methodName));
+		MethodMaker methodMaker = methodRepository.get(fieldName);
+		if(methodMaker != null) throw new RuntimeException(" already exist");
+		
+		Method getMethod = getMethod(field, methodName);
+		Method setMethod = setMethod(field, methodName);
+		MethodMaker classProperties = new MethodMaker(getMethod, setMethod);
+		
+		methodRepository.put(fieldName, classProperties);
 	}
 
-	private static GetSetMaker getSetSettings(Field field, String methodName) throws NoSuchMethodException {
+	private static Method setMethod(Field field, String methodName) throws NoSuchMethodException {
+		Method setMethod = field.getDeclaringClass().getDeclaredMethod("set" + methodName, field.getType());
+		return setMethod;
+	}
 
-		Method getter = null;
-
+	private static Method getMethod(Field field, String methodName) throws NoSuchMethodException {
+		Method getMethod;
 		try {
-			getter = field.getDeclaringClass().getDeclaredMethod("get" + methodName, (Class[]) null);
+			getMethod = field.getDeclaringClass().getDeclaredMethod("get" + methodName, (Class[]) null);
 		} catch (NoSuchMethodException e) {
-			getter = field.getDeclaringClass().getDeclaredMethod("is" + methodName, (Class[]) null);
+			getMethod = field.getDeclaringClass().getDeclaredMethod("is" + methodName, (Class[]) null);
 		}
-		Method setter = field.getDeclaringClass().getDeclaredMethod("set" + methodName, field.getType());
-
-		return new GetSetMaker(getter, setter);
-	}
-
-	public static ReflectionBuilder getInstance() {
-		if (reflectionBuilder == null)
-			reflectionBuilder = new ClassReflectionBuilder();
-		return reflectionBuilder;
+		return getMethod;
 	}
 }

@@ -1,49 +1,24 @@
 package org.corenel.core.reflect;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import org.apache.commons.lang.Validate;
 import org.corenel.core.reflect.builder.ReflectionBuilderFactory;
 
 public class ReflectExecutorFactory {
 
-    private static Map<Class<?>, ReflectExecutor> reflectors = new ConcurrentHashMap<Class<?>, ReflectExecutor>();
-
-    private ReflectExecutorFactory() {
-
-        throw new AssertionError( "Does not need to be instant" );
-    }
+    private ReflectExecutorFactory() { }
 
     public static ReflectExecutor build( String clsName ) {
-		if(clsName == null) {
-			throw new RuntimeException("Class name must be not null.");
-		}
-    	   
+
+    	Validate.notEmpty(clsName);
 	    try {
 	
 	        Class<?> clazz = Class.forName( clsName );
-	        return build( clazz );
+	        Validate.notNull(clazz);
+	        return ReflectionBuilderFactory.getReflectionBuilder().buildReflectExecutor( clazz );
 	
 	    } catch ( ClassNotFoundException e ) {
 	
 	        throw new RuntimeException( e );
 	    }
-    }
-
-    public static ReflectExecutor build( Class<?> clazz ) {
-		if(clazz == null) {
-			throw new RuntimeException("Class must be not null.");
-		}
-		
-        ReflectExecutor reflector = reflectors.get( clazz );
-
-        if ( reflector == null ) {
-        	
-            reflector = ReflectionBuilderFactory.getReflectionBuilder().buildReflectExecutor( clazz );
-
-            reflectors.put( clazz, reflector );
-        }
-
-        return reflector;
     }
 }
