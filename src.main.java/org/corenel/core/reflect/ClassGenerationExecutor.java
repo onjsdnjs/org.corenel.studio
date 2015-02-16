@@ -1,7 +1,7 @@
 package org.corenel.core.reflect;
 
 
-public interface ReflectExecutor {
+public interface ClassGenerationExecutor {
 
 	<T> T newInstance(Object[] parameters);
 	

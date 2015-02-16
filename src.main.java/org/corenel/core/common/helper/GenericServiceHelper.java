@@ -2,8 +2,8 @@ package org.corenel.core.common.helper;
 
 import org.corenel.core.context.Context;
 import org.corenel.core.disruptor.handler.chain.EventHandlerChain;
-import org.corenel.core.reflect.builder.ReflectionBuilder;
-import org.corenel.core.reflect.builder.ReflectionBuilderFactory;
+import org.corenel.core.reflect.builder.ClassGenerationBuilder;
+import org.corenel.core.reflect.builder.ClassGenerationBuilderFactory;
 
 /**
  * @author Á¤¼ö¿ø
@@ -11,20 +11,20 @@ import org.corenel.core.reflect.builder.ReflectionBuilderFactory;
 @SuppressWarnings({"serial"})
 public abstract class GenericServiceHelper implements ServiceHelper{
 		
-	private ReflectionBuilder reflectionBuilder;
+	private ClassGenerationBuilder reflectionBuilder;
 	private Context<String, Object> serviceContext;
 	private EventHandlerChain<ServiceHelperHolder<ServiceHelper>>[] eventHandlerChain;
 	
 	public GenericServiceHelper(Context<String, Object> serviceContext) {
 		this.serviceContext = serviceContext;
-		reflectionBuilder = ReflectionBuilderFactory.getReflectionBuilder();
+		reflectionBuilder = ClassGenerationBuilderFactory.getClassGenerationBuilder();
 	}
 	
 	protected Context<String, Object> getServiceContext() {
 		return serviceContext;
 	}
 
-	protected ReflectionBuilder getReflectionBuilder() {
+	protected ClassGenerationBuilder getReflectionBuilder() {
 		return reflectionBuilder;
 	}
 	

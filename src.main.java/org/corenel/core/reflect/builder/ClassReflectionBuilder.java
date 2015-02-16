@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.corenel.core.reflect.ReflectExecutor;
-import org.corenel.core.reflect.executor.ClassReflectExecutor;
-import org.corenel.core.reflect.executor.MethodMaker;
+import org.corenel.core.reflect.ClassGenerationExecutor;
+import org.corenel.core.reflect.executor.DefaultClassGenerationExecutor;
+import org.corenel.core.reflect.executor.ClassMembers;
 import org.corenel.core.util.ClassUtil;
 import org.corenel.core.util.StringUtil;
 
-public class ClassReflectionBuilder implements ReflectionBuilder {
+public class ClassReflectionBuilder implements ClassGenerationBuilder {
 
-	public ReflectExecutor buildReflectExecutor(Class<?> clazz) {
+	public ClassGenerationExecutor buildClassGenerationExecutor(Class<?> clazz) {
 		
-		Map<String, MethodMaker> methodRepository = new HashMap<String, MethodMaker>();
+		Map<String, ClassMembers> methodRepository = new HashMap<String, ClassMembers>();
 		List<Field> fields = ClassUtil.getFields(clazz);
 
 		for (Field field : fields) {
@@ -38,17 +38,19 @@ public class ClassReflectionBuilder implements ReflectionBuilder {
 			}
 		}
 
-		return new ClassReflectExecutor(clazz, methodRepository);
+		return new DefaultClassGenerationExecutor(clazz, methodRepository);
 	}
 
-	private void settingsClassProperties(Map<String, MethodMaker> methodRepository, String methodName, Field field, String fieldName) throws NoSuchMethodException {
+	private void settingsClassProperties(Map<String, ClassMembers> methodRepository, String methodName, Field field, String fieldName) throws NoSuchMethodException {
 
-		MethodMaker methodMaker = methodRepository.get(fieldName);
-		if(methodMaker != null) throw new RuntimeException(" already exist");
+		ClassMembers generator = methodRepository.get(fieldName);
+		if(generator != null) throw new RuntimeException(" already exist");
 		
 		Method getMethod = getMethod(field, methodName);
 		Method setMethod = setMethod(field, methodName);
-		MethodMaker classProperties = new MethodMaker(getMethod, setMethod);
+		ClassMembers classProperties = new ClassMembers();
+		classProperties.setSetMethod(setMethod);
+		classProperties.setGetMethod(getMethod);
 		
 		methodRepository.put(fieldName, classProperties);
 	}

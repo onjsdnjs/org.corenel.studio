@@ -3,17 +3,17 @@ package org.corenel.core.reflect.executor;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
-import org.corenel.core.reflect.ReflectExecutor;
+import org.corenel.core.reflect.ClassGenerationExecutor;
 import org.corenel.core.util.ClassUtil;
 
 @SuppressWarnings("unchecked")
-public class ClassReflectExecutor implements ReflectExecutor {
+public class DefaultClassGenerationExecutor implements ClassGenerationExecutor {
 
-	private final Map<String, MethodMaker> methodRepository;
+	private final Map<String, ClassMembers> methodRepository;
 
 	private Class<?> clazz;
 
-	public ClassReflectExecutor(Class<?> clazz, Map<String, MethodMaker> methodRepository) {
+	public DefaultClassGenerationExecutor(Class<?> clazz, Map<String, ClassMembers> methodRepository) {
 		this.methodRepository = methodRepository;
 		this.clazz = clazz;
 	}
@@ -24,11 +24,11 @@ public class ClassReflectExecutor implements ReflectExecutor {
 
 	public <T> void setInvoke(Object obj, String fieldName, T value) {
 
-		MethodMaker methodMaker = methodRepository.get(fieldName);
-		Validate.notNull(methodMaker);
+		ClassMembers generator = methodRepository.get(fieldName);
+		Validate.notNull(generator);
 		try {
 			Object[] args = new Object[] { value };
-			methodMaker.setMethod.invoke(obj, args);
+			generator.getSetMethod().invoke(obj, args);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -37,10 +37,10 @@ public class ClassReflectExecutor implements ReflectExecutor {
 
 	public <T> T getInvoke(Object obj, String fieldName) {
 
-		MethodMaker methodMaker = methodRepository.get(fieldName);
-		Validate.notNull(methodMaker);
+		ClassMembers generator = methodRepository.get(fieldName);
+		Validate.notNull(generator);
 		try {
-			return (T) methodMaker.getMethod.invoke(obj, (Object[]) null);
+			return (T) generator.getGetMethod().invoke(obj, (Object[]) null);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
