@@ -17,23 +17,22 @@ public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 	public ClassGenerationExecutor buildClassGenerationExecutor(Class<?> klass) {
 		
 		Map<String, ClassMembers> methodRepository = new HashMap<String, ClassMembers>();
-		List<Field> fields = ClassUtil.getFields(klass);
+		List<Field> fieldList = ClassUtil.getFields(klass);
 
-		for (Field field : fields) {
+		for (Field f : fieldList) {
 
-			String fieldName = field.getName();
-			String methodName = StringUtil.getMethod(fieldName);
+			String field = f.getName();
+			String method = StringUtil.getMethod(field);
 
 			try {
-
-				generateClassMembers(methodRepository, methodName, field, fieldName);
+				generateClassMembers(methodRepository, method, f, field);
 
 			} catch (NoSuchMethodException e) {
 
-				methodName = StringUtil.transformCharacter(field.getName(), true);
+				method = StringUtil.transformCharacter(f.getName(), true);
 				try {
-					generateClassMembers(methodRepository, methodName, field, fieldName);
-				} catch (NoSuchMethodException e1) {
+					generateClassMembers(methodRepository, method, f, field);
+				} catch (NoSuchMethodException ex) {
 				}
 			}
 		}

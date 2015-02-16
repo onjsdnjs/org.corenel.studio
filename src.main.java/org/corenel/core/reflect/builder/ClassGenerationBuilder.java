@@ -4,6 +4,6 @@ import org.corenel.core.reflect.ClassGenerationExecutor;
 
 public interface ClassGenerationBuilder {
 
-	ClassGenerationExecutor buildClassGenerationExecutor(Class<?> cls);
+	ClassGenerationExecutor buildClassGenerationExecutor(Class<?> klass);
 
 }
