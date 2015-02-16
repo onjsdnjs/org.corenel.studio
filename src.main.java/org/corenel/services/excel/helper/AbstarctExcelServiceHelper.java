@@ -6,7 +6,7 @@ import org.corenel.core.common.ApplicationConstants;
 import org.corenel.core.common.domain.ExcelVO;
 import org.corenel.core.common.helper.GenericServiceHelper;
 import org.corenel.core.context.Context;
-import org.corenel.core.reflect.ReflectExecutor;
+import org.corenel.core.reflect.ClassGenerationExecutor;
 import org.corenel.services.excel.service.ExcelService;
 import org.corenel.services.excel.validator.ExcelEvent;
 import org.springframework.ui.ModelMap;
@@ -21,7 +21,7 @@ public abstract class AbstarctExcelServiceHelper extends GenericServiceHelper im
 	private ExcelVO excelVO;
 	private ModelMap model;
 	private String columnKey;
-	private ReflectExecutor classReflectExecutor;
+	private ClassGenerationExecutor classReflectExecutor;
 	
 	public AbstarctExcelServiceHelper(Context<String, Object> context) {
 		
@@ -34,10 +34,10 @@ public abstract class AbstarctExcelServiceHelper extends GenericServiceHelper im
 	}
 	public void setExcelVO(ExcelVO excelVO){
 		this.excelVO = excelVO;
-		classReflectExecutor = getReflectionBuilder().buildReflectExecutor(excelVO.getClass());
+		classReflectExecutor = getclassGenerationBuilder().buildClassGenerationExecutor(excelVO.getClass());
 	}
 	
-	protected ReflectExecutor getClassReflectExecutor() {
+	protected ClassGenerationExecutor getClassReflectExecutor() {
 		return classReflectExecutor;
 	}
 	
