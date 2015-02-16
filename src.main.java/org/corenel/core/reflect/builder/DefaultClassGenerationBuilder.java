@@ -14,10 +14,10 @@ import org.corenel.core.util.StringUtil;
 
 public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 
-	public ClassGenerationExecutor buildClassGenerationExecutor(Class<?> clazz) {
+	public ClassGenerationExecutor buildClassGenerationExecutor(Class<?> klass) {
 		
 		Map<String, ClassMembers> methodRepository = new HashMap<String, ClassMembers>();
-		List<Field> fields = ClassUtil.getFields(clazz);
+		List<Field> fields = ClassUtil.getFields(klass);
 
 		for (Field field : fields) {
 
@@ -26,28 +26,28 @@ public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 
 			try {
 
-				settingsClassProperties(methodRepository, methodName, field, fieldName);
+				generateClassMembers(methodRepository, methodName, field, fieldName);
 
 			} catch (NoSuchMethodException e) {
 
 				methodName = StringUtil.transformCharacter(field.getName(), true);
 				try {
-					settingsClassProperties(methodRepository, methodName, field, fieldName);
+					generateClassMembers(methodRepository, methodName, field, fieldName);
 				} catch (NoSuchMethodException e1) {
 				}
 			}
 		}
 
-		return new DefaultClassGenerationExecutor(clazz, methodRepository);
+		return new DefaultClassGenerationExecutor(klass, methodRepository);
 	}
 
-	private void settingsClassProperties(Map<String, ClassMembers> methodRepository, String methodName, Field field, String fieldName) throws NoSuchMethodException {
+	private void generateClassMembers(Map<String, ClassMembers> methodRepository, String method, Field field, String fieldName) throws NoSuchMethodException {
 
 		ClassMembers generator = methodRepository.get(fieldName);
 		if(generator != null) throw new RuntimeException(" already exist");
 		
-		Method getMethod = getMethod(field, methodName);
-		Method setMethod = setMethod(field, methodName);
+		Method getMethod = getMethod(field, method);
+		Method setMethod = setMethod(field, method);
 		ClassMembers classMember = new ClassMembers();
 		classMember.setSetMethod(setMethod);
 		classMember.setGetMethod(getMethod);
@@ -55,17 +55,17 @@ public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 		methodRepository.put(fieldName, classMember);
 	}
 
-	private static Method setMethod(Field field, String methodName) throws NoSuchMethodException {
-		Method setMethod = field.getDeclaringClass().getDeclaredMethod("set" + methodName, field.getType());
+	private static Method setMethod(Field field, String method) throws NoSuchMethodException {
+		Method setMethod = field.getDeclaringClass().getDeclaredMethod("set" + method, field.getType());
 		return setMethod;
 	}
 
-	private static Method getMethod(Field field, String methodName) throws NoSuchMethodException {
+	private static Method getMethod(Field field, String method) throws NoSuchMethodException {
 		Method getMethod;
 		try {
-			getMethod = field.getDeclaringClass().getDeclaredMethod("get" + methodName, (Class[]) null);
+			getMethod = field.getDeclaringClass().getDeclaredMethod("get" + method, (Class[]) null);
 		} catch (NoSuchMethodException e) {
-			getMethod = field.getDeclaringClass().getDeclaredMethod("is" + methodName, (Class[]) null);
+			getMethod = field.getDeclaringClass().getDeclaredMethod("is" + method, (Class[]) null);
 		}
 		return getMethod;
 	}
