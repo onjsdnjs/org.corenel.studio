@@ -48,11 +48,11 @@ public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 		
 		Method getMethod = getMethod(field, methodName);
 		Method setMethod = setMethod(field, methodName);
-		ClassMembers classProperties = new ClassMembers();
-		classProperties.setSetMethod(setMethod);
-		classProperties.setGetMethod(getMethod);
+		ClassMembers classMember = new ClassMembers();
+		classMember.setSetMethod(setMethod);
+		classMember.setGetMethod(getMethod);
 		
-		methodRepository.put(fieldName, classProperties);
+		methodRepository.put(fieldName, classMember);
 	}
 
 	private static Method setMethod(Field field, String methodName) throws NoSuchMethodException {
