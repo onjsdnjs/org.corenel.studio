@@ -1,31 +1,30 @@
 package org.corenel.core.util;
 
+import org.apache.commons.lang.Validate;
+
 public class StringUtil {
 
-    public static String changeFirstCharacter(String str, boolean useCase) {
+    public static String transformCharacter(String charValue, boolean useCase) {
 
-        if (str == null || str.length() == 0)
-            return str;
+        Validate.notEmpty(charValue);
 
-        StringBuilder sb = new StringBuilder(str.length());
+        StringBuilder character = new StringBuilder(charValue.length());
 
-        if (useCase)
-            sb.append(Character.toUpperCase(str.charAt(0)));
-        else
-            sb.append(Character.toLowerCase(str.charAt(0)));
+        if (useCase) character.append(Character.toUpperCase(charValue.charAt(0)));
+        else character.append(Character.toLowerCase(charValue.charAt(0)));
 
-        sb.append(str.substring(1));
+        character.append(charValue.substring(1));
 
-        return sb.toString();
+        return character.toString();
     }
 
-    public static String getMethodName(String fieldName) {
+    public static String getMethod(String field) {
 
-        char[] nameChar = fieldName.toCharArray();
+        char[] chars = field.toCharArray();
 
-        if (nameChar.length > 0 && Character.isLowerCase(nameChar[0]) && (nameChar.length == 1 || !Character.isUpperCase(nameChar[1]))) {
-            fieldName = changeFirstCharacter(fieldName, true);
+        if ((Character.isLowerCase(chars[0]) &&chars.length > 0) && (!Character.isUpperCase(chars[1]) || chars.length == 1)) {
+            field = transformCharacter(field, true);
         }
-        return fieldName;
+        return field;
     }
 }

@@ -22,7 +22,7 @@ public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 		for (Field field : fields) {
 
 			String fieldName = field.getName();
-			String methodName = StringUtil.getMethodName(fieldName);
+			String methodName = StringUtil.getMethod(fieldName);
 
 			try {
 
@@ -30,7 +30,7 @@ public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 
 			} catch (NoSuchMethodException e) {
 
-				methodName = StringUtil.changeFirstCharacter(field.getName(), true);
+				methodName = StringUtil.transformCharacter(field.getName(), true);
 				try {
 					settingsClassProperties(methodRepository, methodName, field, fieldName);
 				} catch (NoSuchMethodException e1) {
