@@ -12,7 +12,7 @@ import org.corenel.core.reflect.executor.ClassMembers;
 import org.corenel.core.util.ClassUtil;
 import org.corenel.core.util.StringUtil;
 
-public class ClassReflectionBuilder implements ClassGenerationBuilder {
+public class DefaultClassGenerationBuilder implements ClassGenerationBuilder {
 
 	public ClassGenerationExecutor buildClassGenerationExecutor(Class<?> clazz) {
 		

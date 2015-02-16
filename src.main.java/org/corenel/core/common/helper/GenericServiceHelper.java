@@ -11,21 +11,21 @@ import org.corenel.core.reflect.builder.ClassGenerationBuilderFactory;
 @SuppressWarnings({"serial"})
 public abstract class GenericServiceHelper implements ServiceHelper{
 		
-	private ClassGenerationBuilder reflectionBuilder;
+	private ClassGenerationBuilder classGenerationBuilder;
 	private Context<String, Object> serviceContext;
 	private EventHandlerChain<ServiceHelperHolder<ServiceHelper>>[] eventHandlerChain;
 	
 	public GenericServiceHelper(Context<String, Object> serviceContext) {
 		this.serviceContext = serviceContext;
-		reflectionBuilder = ClassGenerationBuilderFactory.getClassGenerationBuilder();
+		classGenerationBuilder = ClassGenerationBuilderFactory.getClassGenerationBuilder();
 	}
 	
 	protected Context<String, Object> getServiceContext() {
 		return serviceContext;
 	}
 
-	protected ClassGenerationBuilder getReflectionBuilder() {
-		return reflectionBuilder;
+	protected ClassGenerationBuilder getclassGenerationBuilder() {
+		return classGenerationBuilder;
 	}
 	
 	@Override
