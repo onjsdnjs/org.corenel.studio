@@ -136,11 +136,11 @@ public abstract class AbstractExcelUploadServiceHelper extends AbstarctExcelServ
 				//  엑셀 문서의 데이터가 아닌 Controller 클래스에서 인자로 받은 값을 설정
 				if(fieldValues != null && fieldValues.length > i){
 					if(!"".equals(fieldValues[i])){
-						getClassReflectExecutor().setInvoke(excelVO, fieldNames[i],fieldValues[i]);
+//						getClassReflectExecutor().setInvoke(excelVO, fieldNames[i],fieldValues[i]);
 					}
 				//  엑셀 문서의 데이터로 값을 설정 
 				}else{
-					getClassReflectExecutor().setInvoke(excelVO, fieldNames[i], ExcelUploadManager.getExcelValueConvert(row.getCell(startColumIndex).getCellType(),startColumIndex, row));
+//					getClassReflectExecutor().setInvoke(excelVO, fieldNames[i], ExcelUploadManager.getExcelValueConvert(row.getCell(startColumIndex).getCellType(),startColumIndex, row));
 					startColumIndex++;			
 				}
 			}
